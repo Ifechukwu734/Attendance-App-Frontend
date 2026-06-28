@@ -531,7 +531,7 @@ System
     </div>
 
 <div style="overflow: hidden;">
-<h3 id="profile-name"> Michael James</h3>
+<h3 id="profile-name"> </h3>
 <p> <span id="profile-dept"></span> Department</p>
 <br>
 <input type="file" placeholder="Change Photo" id="change-photo"/>
@@ -1011,6 +1011,8 @@ setTimeout(() => {
             i_exp = document.getElementById('input-exp');
             profile_circle = document.getElementById('profile-circle')
 
+            document.getElementById('profile-name').textContent = 'Fetching Profile Details.....';
+
             const response = await fetch(
                 'https://attendance-app-backend-wasa.onrender.com/lecturer-profile/',
                 {
@@ -1025,7 +1027,7 @@ setTimeout(() => {
             if(response.status == 200){
                 profile_info = data.data
                 dept.innerHTML = profile_info.department;
-                name.innerHTML = `${profile_info.first_name} ${profile_info.last_name}`
+                document.getElementById('profile-name').textContent = `${profile_info.first_name} ${profile_info.last_name}`
                 i_first_name.value = profile_info.first_name
                 i_last_name.value = profile_info.last_name
                 i_dept.value = profile_info.department
