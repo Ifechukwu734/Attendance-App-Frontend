@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Students Management</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+
+:root{
+--primary:#2563eb;
+--success:#10b981;
+--danger:#ef4444;
+--warning:#f59e0b;
+--dark:#0f172a;
+--bg:#f8fafc;
+--text:#64748b;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Inter,Segoe UI,sans-serif;
+}
+
+body{
+background:var(--bg);
+padding:30px;
+}
+
+.back-btn{
+    background:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:14px;
+    cursor:pointer;
+    font-weight:600;
+    box-shadow:0 5px 15px rgba(0,0,0,.05);
+}
+
+.back-btn:hover{
+    transform:translateY(-2px);
+}
+
+.message-box{
+    background-color: rgb(250, 61, 61); 
+    height: 30px;
+    margin-block-start: 10px;
+    text-align: center; 
+    padding-top: 3px; 
+    border-radius: 5px; 
+    color: white;
+    opacity: 0;
+    visibility: visible;
+    transform: translateY(-20px);
+    transition: all .3s ease;
+    padding: 5px;
+}
+
+
+.message-box.show{
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.message-box.success{
+    background: #16a34a;
+}
+
+.message-box.error{
+    background: #dc2626;
+}
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:25px;
+flex-wrap:wrap;
+gap:15px;
+}
+
+.header h1{
+color:var(--dark);
+}
+
+.header p{
+color:var(--text);
+margin-top:5px;
+}
+
+.add-btn{
+background:var(--primary);
+color:white;
+border:none;
+padding:14px 20px;
+border-radius:12px;
+cursor:pointer;
+font-weight:600;
+}
+
+.filters{
+display:flex;
+gap:15px;
+margin-bottom:25px;
+flex-wrap:wrap;
+}
+
+.filters input,
+.filters select{
+padding:12px;
+border:none;
+border-radius:12px;
+background:white;
+box-shadow:0 3px 10px rgba(0,0,0,.05);
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+margin-bottom:25px;
+}
+
+.stat-card{
+background:white;
+padding:25px;
+border-radius:20px;
+box-shadow:0 5px 20px rgba(0,0,0,.05);
+}
+
+.stat-card h4{
+color:var(--text);
+margin-bottom:10px;
+}
+
+.students-card{
+background:white;
+padding:25px;
+border-radius:20px;
+box-shadow:0 5px 20px rgba(0,0,0,.05);
+overflow:auto;
+}
+
+.table-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.export-btn{
+background:#10b981;
+color:white;
+border:none;
+padding:12px 18px;
+border-radius:10px;
+cursor:pointer;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+min-width:1100px;
+}
+
+th{
+background:#f1f5f9;
+padding:15px;
+text-align:left;
+}
+
+td{
+padding:15px;
+border-bottom:1px solid #e2e8f0;
+}
+
+.student{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.student img{
+width:45px;
+height:45px;
+border-radius:50%;
+}
+
+.badge{
+padding:6px 12px;
+border-radius:20px;
+font-size:12px;
+font-weight:600;
+}
+
+.present{
+background:#dcfce7;
+color:#15803d;
+}
+
+.warning{
+background:#fef3c7;
+color:#b45309;
+}
+
+.danger{
+background:#fee2e2;
+color:#b91c1c;
+}
+
+.verified{
+background:#dbeafe;
+color:#1d4ed8;
+}
+
+.actions{
+display:flex;
+gap:8px;
+}
+
+.icon-btn{
+width:35px;
+height:35px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+.view{
+background:#dbeafe;
+color:#2563eb;
+}
+
+.edit{
+background:#fef3c7;
+color:#b45309;
+}
+
+.delete{
+background:#fee2e2;
+color:#ef4444;
+}
+
+.progress-bar{
+height:8px;
+background:#e2e8f0;
+border-radius:10px;
+overflow:hidden;
+margin-top:5px;
+}
+
+.progress{
+height:100%;
+background:#10b981;
+}
+
+@media(max-width:768px){
+
+body{
+padding:15px;
+}
+
+}
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+
+<div class="header">
+
+<div>
+<h1>Students Management</h1>
+<p>Manage students, attendance and verification status</p>
+</div>
+
+<button class="back-btn" id="back-btn">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back To Dashboard
+</button>
+
+</div>
+
+<!-- FILTERS -->
+
+<div class="filters">
+<input type="text" placeholder="Search student..." id="search">
+
+
+
+<select id="select-course">
+<!-- <option>All Courses</option>
+<option>CSC101</option>
+<option>CSC301</option>
+<option>CSC401</option> -->
+</select>
+
+<button class="add-btn" id="search-btn">
+    <i class="fa-solid fa-search"></i>
+     Search
+    </button>
+    <p id="message-box" class="message-box"></p>
+</div>
+
+<!-- STATISTICS -->
+
+<div class="stats">
+
+<div class="stat-card">
+<h4>Total Students</h4>
+<h2 id="total-students">0</h2>
+</div>
+
+
+<div class="stat-card">
+<h4>Eligible Students</h4>
+<h2 id="eligible-students">0</h2>
+</div>
+
+<div class="stat-card">
+<h4>Defaulters</h4>
+<h2 id="defaulters">0</h2>
+</div>
+
+</div>
+
+<!-- STUDENTS TABLE -->
+
+<div class="students-card">
+
+<div class="table-header">
+
+<h2>Student Records</h2>
+
+<!-- <button class="export-btn" id="export-btn">
+<i class="fa-solid fa-download"></i>
+ Export Excel
+</button> -->
+
+</div>
+
+<div id="table-wrapper">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Student</th>
+<th>Matric Number</th>
+<th>Level</th>
+<th>Course</th>
+<th>Attendance</th>
+<th>Attendance Score</th>
+<th>Eligibility</th>
+<!-- <th>Actions</th> -->
+</tr>
+
+</thead>
+
+<tbody id="student-table-body">
+
+<!-- <tr>
+
+<td>
+<div class="student">
+<img src="https://i.pravatar.cc/100?img=1">
+<div>
+<strong>John Smith</strong>
+<br>
+<small>john@example.com</small>
+</div>
+</div>
+</td>
+
+<td>CSC/2023/101</td>
+<td>100 Level</td>
+<td>CSC101</td>
+
+<td>
+92%
+<div class="progress-bar">
+<div class="progress" style="width:92%"></div>
+</div>
+</td>
+
+<td>
+5
+</td>
+
+<td>
+<span class="badge present" >
+Not Eligible
+</span>
+</td> -->
+
+<!-- <td>
+<div class="actions">
+<button class="icon-btn view">
+<i class="fa-solid fa-eye"></i>
+</button>
+<button class="icon-btn edit">
+<i class="fa-solid fa-pen"></i>
+</button>
+</div>
+</td> -->
+
+</tr>
+
+
+
+</tbody>
+
+</table>
+
+</div>
+</div>
+
+<script>
+   document.addEventListener(
+    'DOMContentLoaded',
+    getListOfCourses
+);
+   
+   async function getListOfCourses(){
+
+try{
+    select_course = document.getElementById('select-course')
+    token = localStorage.getItem('auth_token');
+
+const response = await fetch(
+        `https://attendance-app-backend-wasa.onrender.com/course/course-list/`,
+        {
+            headers: {
+                'Authorization': `Token ${token}`,
+            }
+        }
+);
+const data = await response.json();
+if(response.status == 200){
+    select_course.innerHTML = '<option> All Courses </option>';
+    data.forEach(element => {
+    
+        select_course.innerHTML += `
+        <option> ${element.course_code} </option>
+        `;
+    });
+}
+} catch(e){
+console.log(e)
+}
+
+}
+
+</script>
+
+<script>
+    back_button = document.getElementById('back-btn');
+
+     back_button.addEventListener(
+        'click',
+    () => { window.location.href = 'dashboard.html'}
+    )
+
+
+</script>
+
+
+<script>
+
+    document.addEventListener(
+        'DOMContentLoaded',
+        GetStudentDetails
+    )
+
+    async function GetStudentDetails(){
+        document.getElementById('export-btn').disabled = true;
+        try{
+        const token = localStorage.getItem('auth_token');
+        const course_code = localStorage.getItem('course_code');
+        courses_table = document.getElementById('student-table-body');
+        table_wrapper = document.getElementById('table-wrapper');
+        number_of_students = document.getElementById('total-students');
+        eligible_students = document.getElementById('eligible-students');
+        defaulters = document.getElementById('defaulters');
+
+
+        if(course_code){
+            const response = await fetch(
+                `https://attendance-app-backend-wasa.onrender.com/student-page/?course_code=${course_code}`,
+                {
+                    headers: {
+                        'Authorization': `Token ${token}`,
+                    }
+                }
+        );
+        const data = await response.json();
+        const students = data.data
+        
+        if(response.status == 200){
+            document.getElementById('export-btn').disabled = false;
+            courses_table.innerHTML = '';
+            defaulters.innerHTML = data.num_of_defaulter;
+            number_of_students.innerHTML = data.num_of_eligible;
+            eligible_students.innerHTML = data.total_students;
+            students.forEach(element => {
+                courses_table.innerHTML += `
+                <tr>
+
+                    <td>
+                    <div class="student">
+                     
+                    <div>
+                    <strong>${element.first_name} ${element.last_name}</strong>
+                    <br>
+                    <small>${element.email}</small>
+                    </div>
+                    </div>
+                    </td>
+
+                    <td>CSC/2023/101</td>
+                    <td>${element.level} </td>
+                    <td>${element.course_code}</td>
+
+                    <td>
+                    ${element.attendance_percentage}%
+                    <div class="progress-bar">
+                        <div class="progress" style="width:${element.attendance_rate}%; background:${ element.attendance_rate > 70 ? 'green' : element.attendance_rate > 50 ? 'orange' : element.attendance_rate > 39 ? 'lightcoral' : 'red'}"></div>
+                    </div>
+                    </td>
+
+                    <td>
+                    5
+                    </td>
+
+                    <td>
+                    <span class="badge present" style="background-color: ${element.eligible_for_exam ? '#dcfce7;' : ' rgb(251, 94, 94)'}; color: ${element.eligible_for_exam ? '#15803d' : 'white'}">
+                    ${element.eligible_for_exam ? 'Eligible' : 'Not Eligible'}
+                    </span>
+                    </td>
+
+                    
+
+                    </tr>
+                `
+            });
+
+        }else if(response.status == 404){
+            defaulters.innerHTML = 0;
+            number_of_students.innerHTML = 0;
+            eligible_students.innerHTML = 0;
+            document.getElementById('export-btn').disabled = true;
+            table_wrapper.innerHTML = '';
+            table_wrapper.innerHTML = `<p style="text-align:center; font-weight: bold;"> No student Record(s) Found for ${course_code} </p>`;
+            
+            
+        } else{
+            table_wrapper.innerHTML = '';
+            table_wrapper.innerHTML = `<p style="text-align:center; font-weight: bold;"> ${students} </p>`;
+        }
+        localStorage.removeItem('course_code');
+
+        } 
+        
+        
+        // else{
+        //     
+        }
+
+     catch(e){
+        console.log(e);
+    }
+    }
+</script>
+
+
+<script>
+    search_btn = document.getElementById('search-btn');
+    search_btn.addEventListener(
+        'click',
+        searchStudentDetails
+    )
+
+    async function searchStudentDetails(){
+        try{
+        token = localStorage.getItem('auth_token');
+
+        search_field = document.getElementById('search').value;
+        course = document.getElementById('select-course').value;
+        if(search_field == ''){
+            showMessage('Input a name to search', 'error')
+            return
+        }
+        search_btn.innerHTML = `<i class="fa-solid fa-search"></i>
+                                                Searching...... `;
+        const response = await fetch(
+                `https://attendance-app-backend-wasa.onrender.com/student-page/?course_code=${course}&search=${search_field}`,
+                {
+                    headers: {
+                        'Authorization': `Token ${token}`,
+                    }
+                }
+        );
+        const data = await response.json();
+        const students = data.data
+        
+        if(response.status == 200){
+            courses_table.innerHTML = '';
+            defaulters.innerHTML = data.num_of_defaulter;
+            number_of_students.innerHTML = data.num_of_eligible;
+            eligible_students.innerHTML = data.total_students;
+            students.forEach(element => {
+                tbody.innerHTML += `
+                <tr>
+
+                    <td>
+                    <div class="student">
+                    
+                    <div>
+                    <strong>${element.first_name} ${element.last_name}</strong>
+                    <br>
+                    <small>${element.email}</small>
+                    </div>
+                    </div>
+                    </td>
+
+                    <td>CSC/2023/101</td>
+                    <td>${element.level} </td>
+                    <td>${element.course_code}</td>
+
+                    <td>
+                    ${element.attendance_percentage}%
+                    <div class="progress-bar">
+                        <div class="progress" style="width:${element.attendance_rate}%; background:${ element.attendance_rate > 70 ? 'green' : element.attendance_rate > 50 ? 'orange' : element.attendance_rate > 39 ? 'lightcoral' : 'red'}"></div>
+                    </div>
+                    </td>
+
+                    <td>
+                    5
+                    </td>
+
+                    <td>
+                    <span class="badge present" style="background-color: ${element.eligible_for_exam ? '#dcfce7;' : ' rgb(251, 94, 94)'}; color: ${element.eligible_for_exam ? '#15803d' : 'white'}">
+                    ${element.eligible_for_exam ? 'Eligible' : 'Not Eligible'}
+                    </span>
+                    </td>
+
+                    
+
+                    </tr>
+                `
+            });
+
+            search_btn.innerHTML = `<i class="fa-solid fa-search"></i>
+                                                Search `;
+
+        }else if(response.status == 404){
+            defaulters.innerHTML = 0;
+            number_of_students.innerHTML = 0;
+            eligible_students.innerHTML = 0;
+
+            table_wrapper.innerHTML = '';
+            table_wrapper.innerHTML = `<p style="text-align:center; font-weight: bold;"> No Record(s) Found </p>`;
+            search_btn.innerHTML = `<i class="fa-solid fa-search"></i>
+                                                Search`;
+            
+        } else{
+            table_wrapper.innerHTML = '';
+            table_wrapper.innerHTML = `<p style="text-align:center; font-weight: bold;"> ${students} </p>`;
+            search_btn.innerHTML = `<i class="fa-solid fa-search"></i>
+                                                Search`;
+        }
+    } catch(e){
+        console.log(e);
+    }
+
+    }
+
+
+    function showMessage(message, type) {
+    const messageBox = document.getElementById('message-box');
+
+    messageBox.textContent = message;
+
+    messageBox.classList.remove('success', 'error');
+
+    messageBox.classList.add(type);
+    messageBox.classList.add('show');
+
+    setTimeout(() => {
+        messageBox.classList.remove('show');
+    }, 3000);
+    }
+</script>
+
+</body>
+</html>

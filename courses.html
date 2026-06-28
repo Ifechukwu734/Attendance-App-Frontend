@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Courses Management</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+
+:root{
+--primary:#2563eb;
+--dark:#0f172a;
+--bg:#f8fafc;
+--card:#ffffff;
+--success:#10b981;
+--warning:#f59e0b;
+--danger:#ef4444;
+--text:#64748b;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Inter,Segoe UI,sans-serif;
+}
+
+body{
+background:var(--bg);
+padding:30px;
+}
+
+.dashboard{
+    display:flex;
+    }
+
+
+.back-btn{
+background:white;
+border:none;
+padding:12px 20px;
+border-radius:14px;
+cursor:pointer;
+font-weight:600;
+box-shadow:0 5px 15px rgba(0,0,0,.05);
+}
+
+.back-btn:hover{
+transform:translateY(-2px);
+}
+
+
+.sidebar{
+    width:270px;
+    height:100vh;
+    position:fixed;
+    background:var(--dark);
+    padding:30px;
+    color:white;
+    }
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:30px;
+flex-wrap:wrap;
+gap:15px;
+}
+
+.header-left h1{
+color:var(--dark);
+margin-bottom:5px;
+}
+
+.header-left p{
+color:var(--text);
+}
+
+.add-btn{
+background:var(--primary);
+color:white;
+border:none;
+padding:14px 22px;
+border-radius:12px;
+cursor:pointer;
+font-weight:600;
+}
+
+
+.message-box{
+    background-color: rgb(250, 61, 61); 
+    height: 30px;
+    margin-block-start: 10px;
+    text-align: center; 
+    padding-top: 3px; 
+    border-radius: 5px; 
+    color: white;
+    opacity: 0;
+    visibility: visible;
+    transform: translateY(-20px);
+    transition: all .3s ease;
+}
+
+
+.message-box.show{
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.message-box.success{
+    background: #16a34a;
+}
+
+.message-box.error{
+    background: #dc2626;
+}
+
+
+
+.filters{
+display:flex;
+gap:15px;
+margin-bottom:25px;
+flex-wrap:wrap;
+}
+
+.filters select,
+.filters input{
+padding:12px;
+border:none;
+border-radius:12px;
+background:white;
+box-shadow:0 3px 10px rgba(0,0,0,.05);
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+margin-bottom:30px;
+}
+
+.stat-card{
+background:white;
+padding:25px;
+border-radius:20px;
+box-shadow:0 5px 20px rgba(0,0,0,.05);
+}
+
+.stat-card h4{
+color:var(--text);
+margin-bottom:10px;
+}
+
+.stat-card h2{
+color:var(--dark);
+}
+
+.course-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(470px, 300px));
+    gap: 20px;
+}
+
+.course-card{
+background:white;
+border-radius:20px;
+overflow:hidden;
+box-shadow:0 10px 25px rgba(0,0,0,.05);
+transition:.3s;
+width: 100%;
+max-width: 450px;
+}
+
+.course-card:hover{
+transform:translateY(-5px);
+}
+
+.course-header{
+background:linear-gradient(
+135deg,
+#2563eb,
+#1d4ed8
+);
+padding:20px;
+color:white;
+}
+
+.course-header h3{
+margin-bottom:8px;
+}
+
+.badge{
+display:inline-block;
+padding:6px 12px;
+background:rgba(255,255,255,.2);
+border-radius:20px;
+font-size:12px;
+}
+
+.course-body{
+padding:20px;
+}
+
+.info{
+display:flex;
+justify-content:space-between;
+margin-bottom:12px;
+}
+
+.info span:first-child{
+color:var(--text);
+}
+
+.progress-box{
+margin-top:20px;
+}
+
+.progress-bar{
+height:10px;
+background:#e2e8f0;
+border-radius:20px;
+overflow:hidden;
+}
+
+.progress{
+height:100%;
+width:92%;
+background:var(--success);
+}
+
+.attendance{
+margin-top:8px;
+font-size:14px;
+color:var(--success);
+font-weight:600;
+}
+
+.actions{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+margin-top:20px;
+}
+
+.btn{
+padding:12px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+font-weight:600;
+}
+
+.students{
+background:#eff6ff;
+color:#2563eb;
+}
+
+.session{
+background:#dcfce7;
+color:#15803d;
+}
+
+.edit{
+background:#fef3c7;
+color:#b45309;
+}
+
+.report{
+background:#fee2e2;
+color:#b91c1c;
+}
+
+
+.modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.5);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+
+    opacity:0;
+    visibility:hidden;
+    transition:0.3s ease;
+    padding:20px;
+}
+
+.modal-overlay.active{
+    opacity:1;
+    visibility:visible;
+}
+
+.modal{
+    background:#fff;
+    width:100%;
+    max-width:420px;
+    border-radius:16px;
+    padding:30px 25px;
+    text-align:center;
+    box-shadow:0 20px 40px rgba(0,0,0,0.15);
+    animation:popup 0.3s ease;
+}
+
+@keyframes popup{
+    from{
+        transform:translateY(20px) scale(0.95);
+        opacity:0;
+    }
+    to{
+        transform:translateY(0) scale(1);
+        opacity:1;
+    }
+}
+
+.modal-icon{
+    width:80px;
+    height:80px;
+    margin:0 auto 20px;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:32px;
+    color:#fff;
+}
+
+.success{
+    background:#22c55e;
+}
+
+.danger{
+    background:#ef4444;
+}
+
+.modal h2{
+    margin-bottom:10px;
+    color:#111827;
+}
+
+.modal p{
+    color:#6b7280;
+    line-height:1.6;
+    margin-bottom:25px;
+}
+
+.modal-buttons{
+    display:flex;
+    gap:12px;
+}
+
+.btn{
+    flex:1;
+    border:none;
+    padding:12px;
+    border-radius:10px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.cancel-btn{
+    background:#e5e7eb;
+    color:#374151;
+}
+
+.cancel-btn:hover{
+    background:#d1d5db;
+}
+
+.create-btn{
+    background:#2563eb;
+    color:#fff;
+}
+
+.create-btn:hover{
+    background:#1d4ed8;
+}
+
+.delete-btn{
+    background:#ef4444;
+    color:#fff;
+}
+
+.delete-btn:hover{
+    background:#dc2626;
+}
+
+@media(max-width:480px){
+
+    .modal{
+        padding:25px 20px;
+    }
+
+    .modal-buttons{
+        flex-direction:column;
+    }
+
+    .btn{
+        width:100%;
+    }
+}
+
+
+
+
+
+@media(max-width:768px){
+
+body{
+padding:15px;
+}
+
+.course-grid{
+grid-template-columns:1fr;
+justify-items: center;
+}
+
+.actions{
+grid-template-columns:1fr;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+    <button class="back-btn" id="back-btn">
+        <i class="fa-solid fa-arrow-left"></i>
+        Back to Dashboard
+    </button>
+
+<div class="header">
+
+<div class="header-left">
+<h1>Courses Management</h1>
+<p>Manage courses, attendance sessions and schedules</p>
+</div>
+
+<button class="add-btn" id="add-course-button">
+<i class="fa-solid fa-plus"></i>
+ Add New Course
+</button>
+
+
+</div>
+
+
+<div class="filters">
+
+<select id="level">
+<option>All Levels</option>
+<option>100 Level</option>
+<option>200 Level</option>
+<option>300 Level</option>
+<option>400 Level</option>
+</select>
+
+<input
+type="text" id="search"
+placeholder="Search course..." required
+>
+<button class="add-btn" id="search-btn">
+    <i class="fa-solid fa-search"></i>
+     Search
+    </button>
+</div>
+
+
+
+
+
+<!-- Statistics -->
+
+<div class="stats">
+
+<div class="stat-card">
+<h4>Total Courses</h4>
+<h2 id="total-courses">0</h2>
+</div>
+
+<div class="stat-card">
+<h4>Total Students</h4>
+<h2 id="total-students">0</h2>
+</div>
+
+<div class="stat-card">
+<h4>Active Sessions</h4>
+<h2 id="active-session">0</h2>
+</div>
+
+<div class="stat-card">
+<h4>Average Attendance</h4>
+<div style="display: flex;">
+<h2 id="average-attendance">0</h2> <h2>%</h2>
+</div>
+</div>
+
+</div>
+
+<!-- Courses -->
+
+<div class="course-grid" id="course-grid">
+
+<!-- Course 1 -->
+
+<!-- <div class="course-card">
+
+<div class="course-header">
+
+<span class="badge">
+100 Level
+</span>
+
+<h3>CSC101</h3>
+
+<p>Introduction to Computing</p>
+
+</div>
+
+<div class="course-body">
+
+<div class="info">
+<span>Students</span>
+<strong>250</strong>
+</div>
+
+<div class="info">
+<span>Venue</span>
+<strong>LT 1</strong>
+</div>
+
+<div class="info">
+<span>Schedule</span>
+<strong>Mon 8:00AM</strong>
+</div>
+
+<div class="info">
+<span>Geofence</span>
+<strong>20m</strong>
+</div>
+
+<div class="progress-box">
+
+<div class="progress-bar">
+<div class="progress" style="background: red; width: 12%;"></div>
+</div>
+
+<div class="attendance" style="color: red;">
+12% Attendance Rate
+</div>
+
+</div>
+
+<div class="actions">
+
+<button class="btn students">
+Students
+</button>
+
+<button class="btn session">
+Start Session
+</button>
+
+<button class="btn edit">
+Edit Course
+</button>
+
+<button class="btn report">
+Reports
+</button>
+
+</div>
+
+</div>
+
+</div> -->
+
+<!-- Course 2 -->
+
+
+
+
+</div>
+
+
+
+<!-- Create Course Modal -->
+<div class="modal-overlay" id="createModal">
+    <div class="modal">
+        <div class="modal-icon success">
+            <i class="fas fa-book"></i>
+        </div>
+
+        <h2>Start Session</h2>
+
+        <p>
+            Are you sure you want to start a session for this course?
+        </p>
+
+        <div class="modal-buttons">
+            <button class="btn cancel-btn" onclick="closeModal('createModal')">
+                Cancel
+            </button>
+
+            <button id="session-button" class="btn create-btn" onclick="createSession()">
+                OK
+            </button>
+        </div>
+
+        <div id="message-box" class="message-box">  </div>
+    </div>
+</div>
+
+
+
+<!-- Delete Course Modal -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal">
+        <div class="modal-icon danger">
+            <i class="fas fa-trash"></i>
+        </div>
+
+        <h2>Delete Course</h2>
+
+        <p>
+            This action cannot be undone. Do you want to delete this course?
+        </p>
+
+        <div class="modal-buttons">
+            <button class="btn cancel-btn" onclick="closeModal('deleteModal')">
+                Cancel
+            </button>
+
+            <button class="btn delete-btn" id="delete-button" onclick="deleteCourse()">
+                OK
+            </button>
+        </div>
+
+        <div id="message-box" class="message-box"> </div>
+    </div>
+    <div id="message-box" class="message-box"> </div>
+</div>
+
+
+<div id="location-error-modal" class="modal-overlay">
+    <div class="modal">
+        <h2>Location Required</h2>
+        <p>
+            You must allow location access to start attendance session.
+            Please enable location permissions and try again.
+        </p>
+        <button class="btn" style="background-color: #1d4ed8; color: white;" onclick="closeModal('location-error-modal')">
+            OK
+        </button>
+    </div>
+</div>
+
+
+<!-- <script>
+
+    document.addEventListener(
+            'DOMContentLoaded',
+            getlocation
+        )
+    
+    async function getlocation(){
+        
+    try{
+    
+    const location =
+        await getLocation();
+    
+    console.log(location.latitude);
+    console.log(location.longitude);
+    
+    }catch(error){
+    
+    console.log(error);
+    
+    }
+    }
+    
+    
+    async function getLocation(){
+    
+    return new Promise((resolve, reject)=>{
+    
+        navigator.geolocation.getCurrentPosition(
+    
+            position => resolve({
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude
+            }),
+    
+            error => reject(error),
+    
+            {
+                enableHighAccuracy:true
+            }
+    
+        );
+    
+    });
+    
+    }
+    </script> -->
+
+
+
+<script>
+
+function openModal(id){
+    document.getElementById(id).classList.add('active');
+}
+
+function closeModal(id){
+    document.getElementById(id).classList.remove('active');
+}
+
+async function createSession(){
+    session_btn = document.getElementById('session-button');
+    session_btn.textContent = 'Starting Session....';
+    session_btn.disabled = true;
+    lattitude = 0;
+    longitude = 0;
+
+    try {
+
+    const location = await getLocation();
+    lattitude = location.latitude;
+    longitude = location.longitude;
+    } catch(error) {
+
+        if (error.code === error.PERMISSION_DENIED) {
+        document.getElementById('location-error-modal').classList.add('active');
+        return
+            
+    } else {
+        alert('Unable to get your location.');
+        console.log('error')
+        return
+    }
+    return
+
+    }
+
+    // Your API call here
+    try{
+        const token = localStorage.getItem('auth_token');
+        course_code = localStorage.getItem('session_course_code');
+        
+       
+    const response = await fetch(
+        'https://attendance-app-backend-wasa.onrender.com/course/attendance-session/',
+        {
+            method: 'POST',
+            headers: {
+                'Authorization': `Token ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                course_code: course_code,
+                longitude: longitude,
+                lattitude: lattitude
+            })
+        }
+    );
+
+    data = await response.json();
+
+    if(response.status == 200){
+        session_btn.textContent = 'Ok';
+        session_btn.disabled = false;
+        showMessage(data.message, 'success');
+        setTimeout(()=>{
+            window.location.href = 'attendance_session.html'
+        }, 2000)
+    } else{
+        session_btn.textContent = 'Ok';
+        session_btn.disabled = false;
+        showMessage(data.message, 'error')
+    }
+    } catch(e){
+        session_btn.textContent = 'Ok';
+        session_btn.disabled = false;
+        console.log(e)
+    }
+
+    //closeModal('createModal');
+
+
+    async function getLocation() {
+
+return new Promise((resolve, reject) => {
+
+    navigator.geolocation.getCurrentPosition(
+
+        position => resolve({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+        }),
+
+        error => reject(error),
+
+        {
+            enableHighAccuracy: true,
+            timeout: 10000
+        }
+
+    );
+
+});
+
+}
+}
+
+
+
+async function deleteCourse(){
+
+    // Your API call here
+
+    try{
+        const token = localStorage.getItem('auth_token');
+        course_id = localStorage.getItem('delete_course_id');
+        delete_button = document.getElementById('delete-button');
+        
+       delete_button.textContent = 'Deleting......'
+    const response = await fetch(
+        'https://attendance-app-backend-wasa.onrender.com/course/course-management/',
+        {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Token ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                course_id: course_id,
+            })
+        }
+    );
+
+    data = await response.json();
+
+    if(response.status == 200){
+        showMessage(data.message, 'success');
+        delete_button.textContent = 'Ok';
+        delete_button.disabled = false;
+        setTimeout(()=>{
+            closeModal('deleteModal');
+            location.reload();
+        }, 2000)
+    } else{
+        delete_button.textContent = 'Ok';
+        delete_button.disabled = false;
+        showMessage(data.message, 'error')
+    }
+    } catch(e){
+        delete_button.textContent = 'Ok';
+        delete_button.disabled = false;
+        console.log(e)
+    }
+
+    
+}
+
+
+function showMessage(message, type) {
+    
+const messageBox = document.getElementById('message-box');
+
+messageBox.textContent = message;
+
+messageBox.classList.remove('success', 'error');
+
+messageBox.classList.add(type);
+messageBox.classList.add('show');
+
+setTimeout(() => {
+    messageBox.classList.remove('show');
+}, 3000);
+}
+
+</script>
+
+
+
+<script>
+    add_course_button = document.getElementById('add-course-button');
+
+    back_button = document.getElementById('back-btn');
+
+    add_course_button.addEventListener(
+        'click',
+        showAddCoursePage
+    );
+
+    function showAddCoursePage(){
+        window.location.href = 'add_course.html';
+    }
+
+    back_button.addEventListener(
+        'click',
+    () => { window.location.href = 'dashboard.html'}
+    )
+</script>
+
+
+
+
+
+
+<script>
+
+    search_button = document.getElementById('search-btn');
+    search_button.addEventListener(
+        'click',
+        getLecturerCourses
+    )
+
+    async function getLecturerCourses(){
+        try{
+            active_session = document.getElementById('active-session');
+            total_students = document.getElementById('total-students');
+            average_attendance = document.getElementById('average-attendance');
+            total_courses = document.getElementById('total-courses');
+            course_grid = document.getElementById('course-grid');
+            search = document.getElementById('search').value;
+            level = document.getElementById('level').value
+            search_button.innerHTML = `<i class="fa-solid fa-search"></i>
+                                                Searching...... `;
+            search_button.disabled = true;
+            token = localStorage.getItem('auth_token');
+            const response = await fetch(
+                `https://attendance-app-backend-wasa.onrender.com/course/course-management/?search=${search}&level=${level}`,
+                {
+                    headers: {
+                        'Authorization': `Token ${token}`,
+                    }
+                }
+            );
+            const data = await response.json();
+            courses = data.data;
+            
+            if(response.status == 200){
+                active_session.innerHTML = `${data.active_session}`;
+                total_students.innerHTML = `${data.total_students}`;
+                average_attendance.innerHTML = `${data.average_attendance}`;
+                total_courses.innerHTML = `${data.number_of_courses}`;
+                if(courses.length == 0){
+                    search_button.innerHTML = `<i class="fa-solid fa-search"></i>
+                                                Search`;
+                    search_button.disabled = false;
+                    course_grid.innerHTML = `<p style="text-align: center; font-weight: bold"> Couldn't find Course  </p>`;
+                    return
+                } else{
+                    search_button.innerHTML = `<i class="fa-solid fa-search"></i>
+                                                Search `;
+                    search_button.disabled = false;
+                    course_grid.innerHTML = '';
+                    courses.forEach(element => {
+                        course_grid.innerHTML += `
+                    
+                                <div class="course-card">
+
+                                <div class="course-header">
+
+                                <span class="badge">
+                                ${element.level}
+                                </span>
+
+                                <h3>${element.course_code}</h3>
+
+                                <p> ${element.course_title} </p>
+
+                                </div>
+
+                                <div class="course-body">
+
+                                <div class="info">
+                                <span>Students</span>
+                                <strong> ${element.number_of_students} </strong>
+                                </div>
+
+                                <div class="info">
+                                <span>Venue</span>
+                                <strong> ${element.course_location} </strong>
+                                </div>
+
+                                <div class="info">
+                                <span>Schedule</span>
+                                <strong> ${element.day} ${formatTime(element.start_time)}</strong>
+                                </div>
+
+                                <div class="info">
+                                <span>Geofence</span>
+                                <strong> ${element.geofencing}</strong>
+                                </div>
+
+                                <div  class="progress-box">
+
+                                <div class="progress-bar">
+                                <div class="progress" style="width:${element.attendance_rate}%; background:${ element.attendance_rate > 70 ? 'green' : element.attendance_rate > 50 ? 'orange' : element.attendance_rate > 39 ? 'lightcoral' : 'red'}"></div>
+                                </div>
+
+                                <div class="attendance" style="color:${ element.attendance_rate > 70 ? 'green' : element.attendance_rate > 50 ? 'orange' : element.attendance_rate > 39 ? 'lightcoral' : 'red'}">
+                                ${element.attendance_rate}% Attendance Rate
+                                </div>
+
+                                </div>
+
+                                <div class="actions">
+
+                                <button class="btn students student-btn" data-course-code="${element.course_code}">
+                                Students
+                                </button>
+
+                                <button class="btn session session-btn" onclick="openModal('createModal')" data-session-course-code="${element.course_code}">
+                                    Start Session
+                                </button>
+
+                                <button class="btn edit edit-btn" data-course-id="${element.id}">
+                                Edit Course
+                                </button>
+
+                                <button class="btn report delete-button" onclick="openModal('deleteModal')" data-delete-course="${element.id}">
+                                    Delete Course
+                                </button>
+
+                                </div>
+
+                                </div>
+
+                                </div>
+                    `
+                    });
+                    
+                }
+            }
+        } catch(e){
+            search_button.innerHTML = `<i class="fa-solid fa-search"></i>
+                                                Search `;
+            search_button.disabled = false;
+            console.log(e)
+        }
+
+    }
+
+    function formatTime(timeString){
+
+const [hours, minutes] =
+timeString.split(':');
+
+let hour = parseInt(hours);
+let period = 'AM';
+
+if(hour >= 12){
+period = 'PM';
+}
+
+if(hour === 0){
+hour = 12;
+} else if(hour > 12){
+hour -= 12;
+} 
+
+if(hour < 10){
+hour = `0${hour}`;
+}
+
+return `${hour}:${minutes} ${period}`;
+}
+
+
+</script>
+
+
+<script>
+    document.addEventListener(
+        'DOMContentLoaded',
+        getLecturerCourses
+    )
+
+    async function getLecturerCourses(){
+        try{
+            active_session = document.getElementById('active-session');
+            total_students = document.getElementById('total-students');
+            average_attendance = document.getElementById('average-attendance');
+            total_courses = document.getElementById('total-courses');
+            course_grid = document.getElementById('course-grid');
+            search = document.getElementById('search').value;
+
+            token = localStorage.getItem('auth_token');
+            course_grid.innerHTML = `<p style="text-align: center; font-weight: bold"> Getting Courses..... </p>`;
+            const response = await fetch(
+                `https://attendance-app-backend-wasa.onrender.com/course/course-management/`,
+                {
+                    headers: {
+                        'Authorization': `Token ${token}`,
+                    }
+                }
+            );
+            const data = await response.json();
+            courses = data.data;
+            if(response.status == 200){
+                course_grid.innerHTML = '';
+                active_session.innerHTML = `${data.active_session}`;
+                total_students.innerHTML = `${data.total_students}`;
+                average_attendance.innerHTML = `${data.average_attendance}`;
+                total_courses.innerHTML = `${data.number_of_courses}`;
+                if(courses.length == 0){
+                    course_grid.innerHTML = `<p style="text-align: center; font-weight: bold"> No Course(s) added yet </p>`;
+                    return
+                } else{
+                    courses.forEach(element => {
+                        course_grid.innerHTML += `
+                    
+                                <div class="course-card">
+
+                                <div class="course-header">
+
+                                <span class="badge">
+                                ${element.level}
+                                </span>
+
+                                <h3>${element.course_code}</h3>
+
+                                <p> ${element.course_title} </p>
+
+                                </div>
+
+                                <div class="course-body">
+
+                                <div class="info">
+                                <span>Students</span>
+                                <strong> ${element.number_of_students} </strong>
+                                </div>
+
+                                <div class="info">
+                                <span>Venue</span>
+                                <strong> ${element.course_location} </strong>
+                                </div>
+
+                                <div class="info">
+                                <span>Schedule</span>
+                                <strong> ${element.day} ${formatTime(element.start_time)}</strong>
+                                </div>
+
+                                <div class="info">
+                                <span>Geofence</span>
+                                <strong> ${element.geofencing}</strong>
+                                </div>
+
+                                <div  class="progress-box">
+
+                                <div class="progress-bar">
+                                <div class="progress" style="width:${element.attendance_rate}%; background:${ element.attendance_rate > 70 ? 'green' : element.attendance_rate > 50 ? 'orange' : element.attendance_rate > 39 ? 'lightcoral' : 'red'}"></div>
+                                </div>
+
+                                <div class="attendance" style="color:${ element.attendance_rate > 70 ? 'green' : element.attendance_rate > 50 ? 'orange' : element.attendance_rate > 39 ? 'lightcoral' : 'red'}">
+                                ${element.attendance_rate}% Attendance Rate
+                                </div>
+
+                                </div>
+
+                                <div class="actions">
+
+                                <button class="btn students student-btn" data-course-code="${element.course_code}">
+                                Students
+                                </button>
+
+                                <button class="btn session session-btn" onclick="openModal('createModal')" data-session-course-code="${element.course_code}">
+                                    Start Session
+                                </button>
+
+                                <button class="btn edit edit-btn" data-course-id="${element.id}">
+                                Edit Course
+                                </button>
+
+                                <button class="btn report delete-button" onclick="openModal('deleteModal')" data-delete-course="${element.id}">
+                                    Delete Course
+                                </button>
+
+                                </div>
+
+                                </div>
+
+                                </div>
+
+        
+                    `
+                    });
+                    
+                }
+            }
+        } catch(e){
+            console.log(e)
+        }
+
+    }
+
+
+    function formatTime(timeString){
+
+const [hours, minutes] =
+timeString.split(':');
+
+let hour = parseInt(hours);
+let period = 'AM';
+
+if(hour >= 12){
+period = 'PM';
+}
+
+if(hour === 0){
+hour = 12;
+} else if(hour > 12){
+hour -= 12;
+} 
+
+if(hour < 10){
+hour = `0${hour}`;
+}
+
+return `${hour}:${minutes} ${period}`;
+}
+
+
+</script>
+
+<script>
+course_grid = document.getElementById('course-grid');
+
+course_grid.addEventListener('click', function(e){
+
+if(e.target.classList.contains('edit-btn')){
+
+    const courseId =
+        e.target.dataset.courseId;
+
+    localStorage.setItem('course_id', courseId);
+
+    window.location.href = 'update_course.html'
+
+}
+
+});
+</script>
+
+
+
+<script>
+    course_grid = document.getElementById('course-grid');
+    
+    course_grid.addEventListener('click', function(e){
+    
+    if(e.target.classList.contains('session-btn')){
+    
+        const coursecode =
+            e.target.dataset.sessionCourseCode;
+    
+        localStorage.setItem('session_course_code', coursecode);
+    
+    
+    }
+    
+    });
+    </script>
+
+
+<script>
+    course_grid = document.getElementById('course-grid');
+    
+    course_grid.addEventListener('click', function(e){
+    
+    if(e.target.classList.contains('delete-button')){
+    
+        const courseId =
+            e.target.dataset.deleteCourse;
+    
+        localStorage.setItem('delete_course_id', courseId);
+    
+        console.log(courseId)
+    }
+    
+    });
+    </script>
+
+
+
+<script>
+    course_grid = document.getElementById('course-grid');
+    
+    course_grid.addEventListener('click', function(e){
+    
+    if(e.target.classList.contains('student-btn')){
+        const courseCode =
+            e.target.dataset.courseCode;
+            
+        localStorage.setItem('course_code', courseCode);
+        
+        window.location.href = 'students.html'
+    
+    }
+    
+    });
+    </script>
+
+</body>
+</html>

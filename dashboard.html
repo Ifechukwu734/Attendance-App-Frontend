@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>EduAttend Lecturer Dashboard</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <i class="fa-solid fa-graduation-cap"></i>
+            EduAttend
+        </div>
+
+        <ul class="menu">
+
+            <li>
+                <a class="active">
+                    <i class="fa-solid fa-chart-line"></i>
+                    Dashboard
+                </a>
+            </li>
+
+            
+
+            <li>
+                <a href="courses.html" style="text-decoration: none;">
+                    <i class="fa-solid fa-book-open"></i>
+                    Courses
+                </a>
+            </li>
+
+            <li>
+                <a href="attendance_session.html" style="text-decoration: none;">
+                    <i class="fa-solid fa-qrcode"></i>
+                    Attendance Sessions
+                </a>
+            </li>
+
+            <li>
+                <a href="students.html" style="text-decoration: none;">
+                    <i class="fa-solid fa-users"></i>
+                    Students
+                </a>
+            </li>
+
+            <!-- <li>
+                <a href="analytics.html" style="text-decoration: none;">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    Analytics
+                </a>
+            </li> -->
+
+            <li>
+                <a href="settings.html" style="text-decoration: none;">
+                    <i class="fa-solid fa-gear"></i>
+                    Settings
+                </a>
+            </li>
+
+        </ul>
+
+    </aside>
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+        <!-- TOPBAR -->
+
+        <div class="topbar">
+
+            <div class="search" style="visibility: hidden;">
+                <!-- <i class="fa-solid fa-search"></i>
+                <input
+                    type="text"
+                    placeholder="Search students, courses..."
+                > -->
+            </div>
+
+            <div class="top-right">
+
+                <!-- <div class="notification">
+                    <i class="fa-solid fa-bell"></i>
+                    <span class="dot"></span>
+                </div> -->
+
+                <div class="profile">
+                    <div id="profile-circle">
+                    <!-- <img src="https://i.pravatar.cc/150?img=12"> -->
+                    </div>
+                    <div>
+                        <h4 id="lecturer-name"></h4>
+                        <small id="lecturer-department"></small>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- WELCOME -->
+
+        <div class="hero">
+
+            <div>
+                <div class="header">
+                    <h1 style="margin-right: 3px;">Welcome Back, <h1 id="lecturer-name-2"> </h1></h1>
+</div>
+                <p>
+                    Manage attendance, courses, students and reports
+                    from one dashboard.
+                </p>
+            </div>
+
+            <!-- <button class="primary-btn">
+                <i class="fa-solid fa-plus"></i>
+                New Attendance Session
+            </button> -->
+
+        </div>
+
+        <!-- STATISTICS -->
+
+        <div class="stats">
+
+            <div class="stat-card">
+                <h4>Total Students</h4>
+                <h2 id="total-students">0</h2>
+            </div>
+
+            <div class="stat-card">
+                <h4>Total Courses</h4>
+                <h2 id="total-courses">0</h2>
+            </div>
+
+            <div class="stat-card">
+                <h4>Attendance Today</h4>
+                <h2 id="attendance-today">0</h2>
+            </div>
+
+            <div class="stat-card">
+                <h4>Attendance Rate</h4>
+                <div class="header">
+                <h2 id="attendance-rate">0</h2> <h2>%</h2>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- LEVELS -->
+
+        
+
+        <!-- ACTIVE SESSION -->
+
+        <section class="section">
+
+            <div class="section-title" id="session-title" >
+                Active Attendance Session
+            </div>
+
+            <div class="session">
+
+                <div>
+
+                    <h2 id="course-code-title">loading...</h2>
+
+                    <p>Venue: <span id="venue"> </span></p>
+
+                    <p>Time: <span id="time"> </span></p>
+
+                    <p>Level: <span id="level">  </span></p>
+
+                    <p>Attendance Radius: <span id="radius">  </span></p>
+
+                </div>
+
+                <div class="token-box">
+
+                    <h3>Attendance Token</h3>
+
+                    <h1 id="otp-token"></h1>
+
+                    <small id="timer" style="color: red;">Expires in - <span id="exp-time">  </span></small>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- COURSES -->
+
+        <section class="section">
+            <div class="section-header">
+
+                <div class="section-title">
+                    My Courses
+                
+                </div>
+                
+
+                <button class="primary-btn" id="add-course-button">
+                    Add Course
+                </button>
+
+            </div>
+            
+            <div class="courses" id="course-list">
+                <p id="display-text"></p>
+            </div>
+            
+        </section>
+
+        <!-- ATTENDANCE TABLE -->
+
+        <section class="section">
+
+            <div class="section-title">
+                Recent Attendance
+            </div>
+
+            <div class="table-wrapper" id="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                    <tr>
+                        <th>Student</th>
+                        <th>Matric No</th>
+                        <th>Level</th>
+                        <th>Course</th>
+                        <th>Status</th>
+                    </tr>
+
+                    </thead>
+
+                    <tbody id="courses-table-body">
+
+                 
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script>
+    add_course_btn = document.getElementById('add-course-button');
+    add_course_btn.addEventListener(
+        'click',
+        addCoursePage
+    )
+
+    function addCoursePage(){
+        window.location.href = 'add_course.html'
+    }
+</script>
+
+<script>
+    document.addEventListener(
+    'DOMContentLoaded',
+    getCourses
+);
+    
+async function getCourses() {
+    lecturer_name = document.getElementById('lecturer-name');
+    lecturer_name_2 = document.getElementById('lecturer-name-2');
+    total_students = document.getElementById('total-students');
+    total_courses = document.getElementById('total-courses');
+    attendance_today = document.getElementById('attendance-today');
+    attendance_rate = document.getElementById('attendance-rate');
+    lecturer_department = document.getElementById('lecturer-department');
+    profile_circle = document.getElementById('profile-circle')
+
+try {
+    const token = localStorage.getItem('auth_token');
+
+    const response = await fetch(
+        'https://attendance-app-backend-wasa.onrender.com/lecturer-dashboard/',
+        {
+            headers: {
+                'Authorization': `Token ${token}`
+            }
+        }
+    );
+
+    const data = await response.json();
+
+    if(response.ok){
+        lecturer_name.innerHTML = `${data.lecturer_profile.first_name} ${data.lecturer_profile.last_name}`;
+        lecturer_name_2.innerHTML = ` ${data.lecturer_profile.first_name}`;
+        lecturer_department.innerHTML = `${data.lecturer_profile.department}`;
+        total_students.innerHTML = `${data.total_number_of_students}`;
+        total_courses.innerHTML = `${data.number_of_courses}`;
+        attendance_rate.innerHTML = `${data.attendance_today_percentage}`;
+        attendance_today.innerHTML = `${data.number_of_attendance_today}`;
+        profile_circle.innerHTML = `<img id="profile-img" src="${data.profile_image}"/>`;
+    }
+
+
+} catch(error) {
+    console.error(error);
+}
+}
+
+</script>
+
+<script>
+    document.addEventListener(
+    'DOMContentLoaded',
+    getAttendanceSession
+    )
+
+    async function getAttendanceSession(){
+        session_title = document.getElementById('session-title');
+        course_code_title = document.getElementById('course-code-title');
+        venue = document.getElementById('venue');
+        radius = document.getElementById('radius');
+        level = document.getElementById('level');
+        time = document.getElementById('time');
+        otp_token = document.getElementById('otp-token');
+        exp_time = document.getElementById('exp-time');
+
+        try{
+            const token = localStorage.getItem('auth_token');
+
+            const response = await fetch(
+                'https://attendance-app-backend-wasa.onrender.com/course/attendance-session-dashboard/',
+                {
+                    headers: {
+                        'Authorization': `Token ${token}`
+                    }
+                }
+            );
+
+            const data = await response.json();
+            
+            if(response.status == 404){
+                
+                session_title.innerHTML = 'No Active Attendance Session';
+                course_code_title.innerHTML = '-------';
+                venue.innerHTML = '-------';
+                radius.innerHTML = '--------';
+                level.innerHTML = '---------';
+                time.innerHTML = '--------';
+                otp_token.innerHTML = '---------';
+                exp_time.innerHTML = '-------';
+                
+            } else if(response.status == 200){
+             session_title.innerHTML = 'Active Attendance Session';
+             course_code_title = `${data.session.course_code} - ${data.session.course_title}`;
+             venue.innerHTML = `${data.session.course_location}`;
+             radius.innerHTML = `${data.session.geofencing}m`;
+             level.innerHTML = `${data.session.level}`;
+             time.innerHTML = `${data.session.start_time} - ${data.session.end_time}`;
+             otp_token.innerHTML = `${data.session.token}`;
+             startCountdown(data.remaining_seconds);
+             exp_time.classList.add('timer-color')
+            }
+        } catch(e){
+            console.log(e);
+        }
+    }
+
+
+    function startCountdown(seconds){
+
+const timerElement =
+    document.getElementById('exp-time');
+    timer = document.getElementById('timer');
+
+let remaining = seconds;
+
+const interval = setInterval(() => {
+
+    if(remaining <= 0){
+
+        clearInterval(interval);
+
+        timer.innerHTML =
+            'Session Closed';
+
+        return;
+    }
+
+    const minutes =
+        Math.floor(remaining / 60);
+
+    const secs =
+        remaining % 60;
+
+    timerElement.textContent =
+        `${minutes}:${String(secs).padStart(2,'0')}`;
+
+    remaining--;
+
+}, 1000);
+
+}
+</script>
+
+
+
+<script>
+
+    document.addEventListener(
+        'DOMContentLoaded',
+        getDashboardCourse
+    )
+
+async function getDashboardCourse(){
+    container = document.getElementById('course-list');
+
+    try{
+        const token = localStorage.getItem('auth_token');
+        const response = await fetch(
+            'https://attendance-app-backend-wasa.onrender.com/course/dashboard-courseview/',
+            {
+                headers: {
+                    'Authorization': `Token ${token}`,
+                }
+            }
+        );
+        const data = await response.json();
+        courses = data.data
+        if(response.status == 200){
+            if(courses.length == 0){
+                document.getElementById('display-text').textContent = 'No course(s) uploaded yet';
+                return
+            } 
+            container.innerHTML = '';
+            courses.forEach( course => {
+                container.innerHTML += `
+                <div class="course-card">
+
+                <span class="badge">
+                    ${course.level}
+                </span>
+
+                <h3>${course.course_code}</h3>
+
+                <p>${course.course_title}</p>
+
+                <small>${course.number_of_students} Students</small>
+
+                </div>
+                `;
+        })
+        }
+    } catch(e){
+        console.log(e);
+    }
+}
+
+</script>
+
+<script>
+    document.addEventListener(
+        'DOMContentLoaded',
+        getRecentStudent
+    )
+
+    async function getRecentStudent() {
+        courses_table = document.getElementById('courses-table-body');
+        table_wrapper = document.getElementById('table-wrapper');
+        try{
+            const token = localStorage.getItem('auth_token');
+            const response = await fetch(
+                'https://attendance-app-backend-wasa.onrender.com/dashboard-recent-attendance/',
+                {
+                    headers: {
+                        'Authorization': `Token ${token}`,
+                    }
+                }
+            );
+            const data = await response.json();
+            students = data.data;
+            
+            if(response.status == 200){
+                if(students.length == 0){
+                table_wrapper.innerHTML = '';
+                  table_wrapper.innerHTML = `<p style="text-align:center; font-weight: bold;"> No Recent Data </p>`;
+                
+                  return
+                }
+            courses_table.innerHTML = '';
+            students.forEach(course => {
+
+            courses_table.innerHTML += `
+                <tr>
+                    <td>${course.first_name} ${course.last_name}</td>
+                    <td>${course.matric_number}</td>
+                    <td>${course.level}</td>
+                    <td>${course.course_code}</td>
+                    <td> ${course.status}</td>
+                </tr>
+            `;
+            });
+            }
+
+        } catch(e){
+            console.log(e);
+        }
+    }
+</script>
+
+<script src="js/script.js"></script>
+
+</body>
+</html>

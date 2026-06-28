@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Attendance Session</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+
+:root{
+--primary:#2563eb;
+--success:#10b981;
+--danger:#ef4444;
+--warning:#f59e0b;
+--dark:#0f172a;
+--bg:#f8fafc;
+--card:#ffffff;
+--text:#64748b;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Inter,Segoe UI,sans-serif;
+}
+
+body{
+background:var(--bg);
+padding:20px;
+}
+
+@media(max-width:768px){
+body{
+padding:15px;
+}
+}
+
+@media(max-width:480px){
+body{
+padding:10px;
+}
+}
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:25px;
+flex-wrap:wrap;
+gap:15px;
+}
+
+.header h1{
+color:var(--dark);
+}
+
+.live-badge{
+background:#dcfce7;
+color:#15803d;
+padding:8px 15px;
+border-radius:30px;
+font-weight:600;
+}
+
+.session-grid{
+display:grid;
+grid-template-columns:minmax(0,2fr) minmax(0,1fr);
+gap:25px;
+margin-bottom:25px;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:20px;
+box-shadow:0 5px 20px rgba(0,0,0,.05);
+}
+
+.course-info h2{
+margin-bottom:15px;
+}
+
+.course-info p{
+color:var(--text);
+margin-bottom:10px;
+}
+
+.qr-container{
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+}
+
+/* .qr-box{
+width:220px;
+height:220px;
+background:#e2e8f0;
+border-radius:15px;
+margin-bottom:15px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:70px;
+color:#94a3b8;
+} */
+
+
+.message-box{
+    background-color: rgb(250, 61, 61); 
+    height: 30px;
+    margin-block-start: 10px;
+    text-align: center; 
+    padding-top: 3px; 
+    border-radius: 5px; 
+    color: white;
+    opacity: 0;
+    visibility: visible;
+    transform: translateY(-20px);
+    transition: all .3s ease;
+}
+
+
+.message-box.show{
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.message-box.success{
+    background: #16a34a;
+}
+
+.message-box.error{
+    background: #dc2626;
+}
+
+
+
+.modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.5);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+
+    opacity:0;
+    visibility:hidden;
+    transition:0.3s ease;
+    padding:20px;
+}
+
+.modal-overlay.active{
+    opacity:1;
+    visibility:visible;
+}
+
+.modal{
+    background:#fff;
+    width:100%;
+    max-width:420px;
+    border-radius:16px;
+    padding:30px 25px;
+    text-align:center;
+    box-shadow:0 20px 40px rgba(0,0,0,0.15);
+    animation:popup 0.3s ease;
+}
+
+@keyframes popup{
+    from{
+        transform:translateY(20px) scale(0.95);
+        opacity:0;
+    }
+    to{
+        transform:translateY(0) scale(1);
+        opacity:1;
+    }
+}
+
+.modal-icon{
+    width:80px;
+    height:80px;
+    margin:0 auto 20px;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:32px;
+    color:#fff;
+}
+
+.success{
+    background:#22c55e;
+}
+
+.danger{
+    background:#ef4444;
+}
+
+.modal h2{
+    margin-bottom:10px;
+    color:#111827;
+}
+
+.modal p{
+    color:#6b7280;
+    line-height:1.6;
+    margin-bottom:25px;
+}
+
+.modal-buttons{
+    display:flex;
+    gap:12px;
+}
+
+.btn-pop{
+    flex:1;
+    border:none;
+    padding:12px;
+    border-radius:10px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.cancel-btn{
+    background:#e5e7eb;
+    color:#374151;
+}
+
+.cancel-btn:hover{
+    background:#d1d5db;
+}
+
+.create-btn{
+    background:#2563eb;
+    color:#fff;
+}
+
+.create-btn:hover{
+    background:#1d4ed8;
+}
+
+.delete-btn{
+    background:#ef4444;
+    color:#fff;
+}
+
+.delete-btn:hover{
+    background:#dc2626;
+}
+
+@media(max-width:480px){
+
+    .modal{
+        padding:25px 20px;
+    }
+
+    .modal-buttons{
+        flex-direction:column;
+    }
+
+    .btn{
+        width:100%;
+    }
+}
+
+
+.back-btn{
+background:white;
+border:none;
+padding:12px 20px;
+border-radius:14px;
+cursor:pointer;
+font-weight:600;
+box-shadow:0 5px 15px rgba(0,0,0,.05);
+}
+
+.back-btn:hover{
+transform:translateY(-2px);
+}
+
+
+table{
+width:100%;
+min-width:700px;
+border-collapse:collapse;
+}
+
+
+.table-wrapper{
+overflow-x:auto;
+width:100%;
+}
+
+.qr-box{
+    width:100%;
+    max-width:300px;
+    aspect-ratio:1/1;
+}
+
+.qr-box img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+}
+
+.token{
+font-size:clamp(24px,6vw,45px);
+font-weight:700;
+color:var(--primary);
+letter-spacing:3px;
+word-break:break-all;
+text-align:center;
+}
+
+.timer{
+font-size:20px;
+font-weight:600;
+margin-top:10px;
+color:var(--danger);
+}
+
+.header p{
+color:var(--text);
+margin-top:5px;
+}
+
+.course-info h2{
+word-break:break-word;
+line-height:1.4;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:20px;
+margin-bottom:25px;
+}
+
+.stat{
+background:white;
+padding:20px;
+border-radius:15px;
+text-align:center;
+box-shadow:0 5px 20px rgba(0,0,0,.05);
+}
+
+.stat h2{
+margin-bottom:8px;
+}
+
+.stat p{
+color:var(--text);
+}
+
+.actions{
+display:flex;
+gap:15px;
+flex-wrap:wrap;
+margin-top:20px;
+}
+
+.btn{
+padding:14px 20px;
+border:none;
+border-radius:12px;
+cursor:pointer;
+font-weight:600;
+}
+
+.primary{
+background:var(--primary);
+color:white;
+}
+
+.success{
+background:var(--success);
+color:white;
+}
+
+.warning{
+background:var(--warning);
+color:white;
+}
+
+.danger{
+background:var(--danger);
+color:white;
+}
+
+.table-card{
+background:white;
+padding:25px;
+border-radius:20px;
+box-shadow:0 5px 20px rgba(0,0,0,.05);
+}
+
+.table-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th{
+background:#f1f5f9;
+padding:15px;
+text-align:left;
+}
+
+td{
+padding:15px;
+border-bottom:1px solid #e2e8f0;
+}
+
+.status{
+padding:6px 12px;
+border-radius:20px;
+font-size:13px;
+}
+
+.present{
+background:#dcfce7;
+color:#15803d;
+}
+
+.late{
+background:#fef3c7;
+color:#b45309;
+}
+
+.geofence{
+background:#eff6ff;
+padding:15px;
+border-radius:12px;
+margin-top:15px;
+}
+
+@media(max-width:900px){
+
+.session-grid{
+grid-template-columns:1fr;
+}
+
+.stats{
+grid-template-columns:repeat(2,1fr);
+}
+
+}
+
+@media(max-width:600px){
+
+.header{
+flex-direction:column;
+align-items:flex-start;
+}
+
+.live-badge{
+width:100%;
+text-align:center;
+}
+
+}
+
+
+
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+
+<button class="back-btn" id="back-btn">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back to Dashboard
+</button>
+
+<div class="header">
+
+<div>
+<h1>Attendance Session</h1>
+<p>Live Attendance Monitoring</p>
+</div>
+
+<div id="live-badge">
+<div class="live-badge" id="badge">
+🟠 No session
+</div>
+</div>
+
+</div>
+
+<!-- SESSION DETAILS -->
+
+<div class="session-grid">
+
+<div class="card course-info">
+
+<h2 id="course-code-title"></h2>
+
+<p><strong>Level:</strong> <span id="level"> </span> </p>
+
+<p><strong>Venue:</strong> <span id="course-location"> </span> </p>
+
+<p><strong>Time:</strong> <span id="time-range"> </span> </p>
+
+<p><strong>Attendance Radius:</strong> <span id="geofencing">  </span> </p>
+
+<div class="geofence">
+📍 Geofencing Enabled
+<br>
+<p id="geofencing-message"> </p>
+</div>
+
+<div class="actions">
+
+
+
+<button class="btn warning" id="refresh-btn" onclick="">
+Refresh Session
+</button>
+
+<button class="btn danger" onclick="openModal('deleteModal')">
+End Session
+</button>
+
+</div>
+<div id="message-box" class="message-box">  </div>
+</div>
+
+<!-- QR AND TOKEN -->
+
+<div class="card qr-container">
+
+<div class="qr-box" id="qr-box">
+<!-- <i class="fa-solid fa-qrcode"></i> -->
+</div>
+
+<div class="token" id="otp-token">
+------
+</div>
+
+<div class="timer" id="timer">
+Expires in <span id="exp-time"> --- </span>
+</div>
+
+</div>
+
+</div>
+
+<!-- STATS -->
+
+<div class="stats">
+
+<div class="stat">
+<h2 id="total-students">0</h2>
+<p>Total Students</p>
+</div>
+
+<div class="stat">
+<h2 id="num-of-present">0</h2>
+<p>Present</p>
+</div>
+
+<div class="stat">
+<h2 id="num-of-absent">0</h2>
+<p>Absent</p>
+</div>
+
+<div class="stat">
+<h2 id="attendance-rate">0%</h2>
+<p>Attendance Rate</p>
+</div>
+
+</div>
+
+<!-- ATTENDANCE TABLE -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<h2>Live Attendance Records</h2>
+
+<button class="btn primary" id="export-btn" onclick="exportAttendance()">
+Export Attendance
+</button>
+
+</div>
+
+<div class="table-wrapper" id="table-wrapper">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Student</th>
+<th>Matric No</th>
+<th>Method</th>
+<th>Time</th>
+<th>Status</th>
+</tr>
+
+</thead>
+
+<tbody id="attendance-table-body">
+
+<!-- <tr>
+<td>John Smith</td>
+<td>CSC/2023/102</td>
+<td>QR Code</td>
+<td>10:04 AM</td>
+<td>
+<span class="status present">
+Present
+</span>
+</td>
+</tr> -->
+
+
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+
+
+<!-- Delete Course Modal -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal">
+        <div class="modal-icon danger">
+            <i class="fas fa-trash"></i>
+        </div>
+
+        <h2>End Session</h2>
+
+        <p>
+            This action cannot be undone. Do you want to End this Session?
+        </p>
+
+        <div class="modal-buttons">
+            <button class="btn-pop cancel-btn" onclick="closeModal('deleteModal')">
+                Cancel
+            </button>
+
+            <button class="btn-pop delete-btn" onclick="EndSession()" id="end-btn">
+                OK
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<script>
+    async function exportAttendance(){
+        try{
+            const token = localStorage.getItem('auth_token')
+            session_id = localStorage.getItem('session_id');
+            response = await fetch(
+                'https://attendance-app-backend-wasa.onrender.com/export-live-attendance/',
+                {
+                    method: 'POST',
+                    headers:{
+                        'Authorization': `Token ${token}`
+                    },
+                    body: JSON.stringify({
+                        session_id: session_id
+                    })
+                }
+            );
+
+            if(response.status == 200){
+                showMessage('your download will start shortly', 'success');
+            } else{
+                showMessage('error downloading records', 'error');
+            }
+
+        } catch(e){
+            console.log(e)
+        }
+    }
+
+
+    function showMessage(message, type) {
+const messageBox = document.getElementById('message-box');
+
+messageBox.textContent = message;
+
+messageBox.classList.remove('success', 'error');
+
+messageBox.classList.add(type);
+messageBox.classList.add('show');
+
+setTimeout(() => {
+    messageBox.classList.remove('show');
+}, 3000);
+}
+</script>
+
+
+<script>
+
+
+function openModal(id){
+    document.getElementById(id).classList.add('active');
+}
+
+function closeModal(id){
+    document.getElementById(id).classList.remove('active');
+}
+
+function createCourse(){
+
+    // Your API call here
+
+    alert('Course created successfully');
+
+    closeModal('createModal');
+}
+
+// function deleteCourse(){
+
+//     // Your API call here
+
+//     alert('Course deleted successfully');
+
+//     closeModal('deleteModal');
+// }
+
+    async function EndSession(){
+        try{
+            end_btn = document.getElementById('end-btn')
+            const token = localStorage.getItem('auth_token');
+            session_id = localStorage.getItem('session_id');
+
+            end_btn.innerHTML = 'Ending Session......'
+            end_btn.disabled = true
+
+            const response = await fetch(
+                'https://attendance-app-backend-wasa.onrender.com/course/end-session/',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Token ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        session_id: session_id
+                    })
+                }
+            );
+
+            const data = await response.json();
+            
+            if(response.status == 200){
+            end_btn.innerHTML = 'Ok'
+            end_btn.disabled = false
+            showMessage(data.message, 'success');
+            localStorage.removeItem('session_id')
+            
+            } else{
+            end_btn.innerHTML = 'Ok'
+            end_btn.disabled = false
+            showMessage(data.message, 'error');
+            }
+        } catch(e){
+            console.log(e);
+            end_btn.innerHTML = 'Ok'
+            end_btn.disabled = false
+        }
+    }
+
+
+    function showMessage(message, type) {
+const messageBox = document.getElementById('message-box');
+
+messageBox.textContent = message;
+
+messageBox.classList.remove('success', 'error');
+
+messageBox.classList.add(type);
+messageBox.classList.add('show');
+
+setTimeout(() => {
+    messageBox.classList.remove('show');
+}, 3000);
+}
+</script>
+
+
+
+<script>
+
+    refresh_btn = document.getElementById('refresh-btn')
+
+    refresh_btn.addEventListener(
+        'click',
+        refreshSession
+    )
+
+    async function refreshSession(){
+        
+        try{
+            session_id = localStorage.getItem('session_id');
+            token = localStorage.getItem('auth_token');
+            refresh_btn.innerHTML = 'Refreshing....'
+            refresh_btn.disabled = true
+        const response = await fetch(
+            'https://attendance-app-backend-wasa.onrender.com/course/attendance-session/',
+            {
+                method: 'PATCH',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    session_id: session_id
+                })
+            }
+        );
+
+        const data = await response.json();
+        console.log(data)
+        if(response.status == 200){
+            if(data.message == 'attendance session refreshed'){
+            refresh_btn.innerHTML = 'Refresh Session'
+            refresh_btn.disabled = false
+            showMessage('Attendance session refreshed', 'success');
+            setTimeout(()=>{
+             location.reload();
+            }, 2000)
+            } else{
+            refresh_btn.innerHTML = 'Refresh Session'
+            refresh_btn.disabled = false
+            showMessage(data.message, 'error')
+            }
+        }
+    } catch(e){
+        refresh_btn.innerHTML = 'Refresh Session'
+        refresh_btn.disabled = false
+        console.log(e);
+    }
+
+}
+
+
+function showMessage(message, type) {
+const messageBox = document.getElementById('message-box');
+
+messageBox.textContent = message;
+
+messageBox.classList.remove('success', 'error');
+
+messageBox.classList.add(type);
+messageBox.classList.add('show');
+
+setTimeout(() => {
+    messageBox.classList.remove('show');
+}, 3000);
+}
+</script>
+
+
+<script>
+
+document.addEventListener(
+        'DOMContentLoaded',
+        getAttendanceSessionDetails
+    )
+
+    async function getAttendanceSessionDetails(){
+        try{
+            token = localStorage.getItem('auth_token');
+
+            course_code_title = document.getElementById('course-code-title');
+            level = document.getElementById('level');
+            course_location = document.getElementById('course-location');
+            time_range = document.getElementById('time-range');
+            geofencing = document.getElementById('geofencing');
+            geofencing_message = document.getElementById('geofencing-message');
+            otp_token = document.getElementById('otp-token');
+            qr_box = document.getElementById('qr-box');
+            timer = document.getElementById('timer');
+            total_students = document.getElementById('total-students');
+            num_of_present = document.getElementById('num-of-present');
+            num_of_absent = document.getElementById('num-of-absent');
+            attendance_rate = document.getElementById('attendance-rate');
+            end_btn = document.getElementById('end-btn');
+            refresh_btn  = document.getElementById('refresh-btn');
+            live_badge = document.getElementById('live-badge');
+            badge = document.getElementById('badge');
+            export_btn = document.getElementById('export-btn');
+            table_wrapper = document.getElementById('table-wrapper');
+            attendance_table_body = document.getElementById('attendance-table-body');
+
+        const response = await fetch(
+            'https://attendance-app-backend-wasa.onrender.com/course/attendance-session/',
+            {
+                headers: {
+                    'Authorization': `Token ${token}`,
+                }
+            }
+        );
+
+        data = await response.json();
+        if(response.status == 200){
+            session = data.session;
+            attendance = data.attendance_record;
+            console.log(session.session_id)
+            localStorage.setItem('session_id', session.session_id)
+            refresh_btn.disabled = false;
+            end_btn.disabled = false;
+            course_code_title.innerHTML = `${session.course_code} - ${session.course_title}`;
+            level.innerHTML = session.level;
+            course_location.innerHTML = session.course_location;
+            time_range.innerHTML = `${formatTime(session.start_time)} - ${formatTime(session.end_time)}`;
+            geofencing.innerHTML = `${session.geofencing} Meters`;
+            geofencing_message.innerHTML = `<p id="geofencing-message"> Students must be within ${session.geofencing}m of the venue to mark attendance. </p>`;
+            otp_token.innerHTML = session.token;
+            qr_box.innerHTML = `<img src="${data.qr_image_url}"/>`;
+            startCountdown(data.remaining_seconds);
+            total_students.innerHTML = session.total_student;
+            num_of_present.innerHTML = session.present;
+            num_of_absent.innerHTML = session.absent;
+            attendance_rate.innerHTML = `${session.attendance_rate}%`;
+            if(session.schedule_status == 'Session Active'){
+            badge.innerHTML = `🟢 ${session.schedule_status}`
+            } else{
+                live_badge.innerHTML = `<div class="live-badge" style="background-color: rgb(255, 229, 182); color: orange;">🟠 ${session.schedule_status}</div>`
+            }
+            if(attendance.length == 0){
+                    attendance_table_body.innerHTML = ''
+                } else{
+                    
+                    attendance.forEach(element => {
+                        
+                    attendance_table_body.innerHTML = `
+                    <tr>
+                    <td>${element.first_name} ${element.last_name}</td>
+                    <td>${element.matric_number}</td>
+                    <td>${element.method}</td>
+                    <td>${formatTimeToAMPM(element.time)}</td>
+                    <td>
+                    <span class="status present">
+                    Present
+                    </span>
+                    </td>
+                    </tr>
+                    `;
+                    });
+                }
+        } else if(response.status == 404){
+            course_code_title.innerHTML = '-----------------';
+            level.innerHTML = '---------';
+            course_location.innerHTML = '---------';
+            time_range.innerHTML = '---------';
+            geofencing.innerHTML = '---------';
+            geofencing_message.innerHTML = `<p id="geofencing-message"> Students must be within geofencing radius of the venue to mark attendance. </p>`;
+            otp_token.innerHTML = '---------';
+            qr_box.innerHTML = ``;
+            timer.innerHTML = '---------';
+            total_students.innerHTML = 0;
+            num_of_present.innerHTML = 0;
+            num_of_absent.innerHTML = 0;
+            attendance_rate.innerHTML = '0%'
+            live_badge.innerHTML = `<div class="live-badge" style="background-color: #fad2d2; color: red;">🔴 No Session</div>`
+            refresh_btn.disabled = true;
+            end_btn.disabled = true;
+            export_btn.disabled = true;
+            table_wrapper.innerHTML = '';
+            table_wrapper.innerHTML = `<p style="text-align:center; font-weight: bold;"> No Attendance Session </p>`
+        }
+    } catch(e){
+        console.log(e)
+    }
+
+    session_id = localStorage.getItem('session_id');
+    console.log('session id: ',session_id)
+    const socket = new WebSocket(`wss://attendance-app-backend-wasa.onrender.com/ws/live-attendance/${session_id}`);
+
+    socket.onmessage = function (event) {
+    const data = JSON.parse(event.data);
+    console.log(data)
+    
+
+    addRowToTable(data.message);
+};
+socket.onopen = function () {
+    console.log("WebSocket connected");
+};
+
+socket.onclose = function () {
+    console.log("WebSocket disconnected");
+};
+
+socket.onerror = function (error) {
+    console.error("WebSocket error:", error);
+};
+
+function addRowToTable(data) {
+    attendance_table_body = document.getElementById('attendance-table-body');
+
+    data.forEach(element => {
+        attendance_table_body.innerHTML += `
+                    <tr>
+                    <td>${element.first_name} ${element.last_name}</td>
+                    <td>${element.matric_number}</td>
+                    <td>${element.method}</td>
+                    <td>${formatTimeToAMPM(element.time)}</td>
+                    <td>
+                    <span class="status present">
+                    Present
+                    </span>
+                    </td>
+                    </tr>
+                    `;
+    });
+
+    //tableBody.prepend(row); // newest on top
+}
+
+}
+
+
+
+function formatTimeToAMPM(time24) {
+    const [hourStr, minute, second] = time24.split(':');
+
+    let hour = Number(hourStr);
+
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+
+    hour = hour % 12;
+    hour = hour === 0 ? 12 : hour;
+
+    return `${hour}:${minute} ${ampm}`;
+}
+
+
+function startCountdown(seconds){
+    live_badge = document.getElementById('live-badge');
+
+const timerElement =
+    document.getElementById('exp-time');
+    timer = document.getElementById('timer');
+
+let remaining = seconds;
+
+const interval = setInterval(() => {
+
+    if(remaining <= 0){
+
+        clearInterval(interval);
+
+        timer.innerHTML =
+            'Session Closed';
+            live_badge.innerHTML = `<div class="live-badge" style="background-color: rgb(255, 229, 182); color: orange;">🟠 Session Ended</div>`
+        return;
+    }
+
+    const minutes =
+        Math.floor(remaining / 60);
+
+    const secs =
+        remaining % 60;
+
+    timerElement.textContent =
+        `${minutes}:${String(secs).padStart(2,'0')}`;
+
+    remaining--;
+
+}, 1000);
+
+}
+
+
+function formatTime(timeString){
+
+const [hours, minutes] =
+timeString.split(':');
+
+let hour = parseInt(hours);
+let period = 'AM';
+
+if(hour >= 12){
+period = 'PM';
+}
+
+if(hour === 0){
+hour = 12;
+} else if(hour > 12){
+hour -= 12;
+} 
+
+if(hour < 10){
+hour = `0${hour}`;
+}
+
+return `${hour}:${minutes} ${period}`;
+}
+</script>
+
+
+<!-- <script>
+
+document.addEventListener(
+        'DOMContentLoaded',
+        getlocation
+    )
+
+async function getlocation(){
+    
+try{
+
+const location =
+    await getLocation();
+
+console.log(location.latitude);
+console.log(location.longitude);
+
+}catch(error){
+
+console.log(error);
+
+}
+}
+
+
+async function getLocation(){
+
+return new Promise((resolve, reject)=>{
+
+    navigator.geolocation.getCurrentPosition(
+
+        position => resolve({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+        }),
+
+        error => reject(error),
+
+        {
+            enableHighAccuracy:true
+        }
+
+    );
+
+});
+
+}
+</script> -->
+
+<script>
+
+    back_button = document.getElementById('back-btn');
+
+    back_button.addEventListener(
+        'click',
+    () => { window.location.href = 'dashboard.html'}
+    )
+</script>
+
+<script>
+  
+</script>
+
+</body>
+</html>
