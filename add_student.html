@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Add New Course</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+
+:root{
+    --primary:#2563eb;
+    --primary-dark:#1d4ed8;
+    --success:#10b981;
+    --danger:#ef4444;
+    --dark:#0f172a;
+    --text:#64748b;
+    --bg:#f1f5f9;
+    --card:#ffffff;
+    --border:#e2e8f0;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Inter,Segoe UI,sans-serif;
+}
+
+body{
+    background:var(--bg);
+    min-height:100vh;
+    padding:30px;
+}
+
+.page-header{
+    max-width:1200px;
+    margin:auto auto 25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:20px;
+}
+
+.page-header h1{
+    color:var(--dark);
+    font-size:2rem;
+    margin-bottom:5px;
+}
+
+.page-header p{
+    color:var(--text);
+}
+
+.message-box{
+    background-color: rgb(250, 61, 61); 
+    height: 30px;
+    margin-block-start: 10px;
+    text-align: center; 
+    padding-top: 3px; 
+    border-radius: 5px; 
+    color: white;
+    opacity: 0;
+    visibility: visible;
+    transform: translateY(-20px);
+    transition: all .3s ease;
+}
+
+
+.message-box.show{
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.message-box.success{
+    background: #16a34a;
+}
+
+.message-box.error{
+    background: #dc2626;
+}
+
+.back-btn{
+    background:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:14px;
+    cursor:pointer;
+    font-weight:600;
+    box-shadow:0 5px 15px rgba(0,0,0,.05);
+}
+
+.back-btn:hover{
+    transform:translateY(-2px);
+}
+
+.form-card{
+    max-width:1200px;
+    margin:auto;
+    background:white;
+    border-radius:24px;
+    padding:40px;
+    box-shadow:
+    0 10px 40px rgba(15,23,42,.08);
+}
+
+.preview-card{
+    background:
+    linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary-dark)
+    );
+
+    color:white;
+    padding:25px;
+    border-radius:20px;
+    margin-bottom:30px;
+}
+
+.preview-card h3{
+    margin-bottom:15px;
+}
+
+.preview-item{
+    margin-bottom:10px;
+}
+
+.preview-item span{
+    opacity:.8;
+    display:block;
+    font-size:.9rem;
+}
+
+.time-group{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:10px;
+}
+
+.section-title{
+    font-size:1.1rem;
+    font-weight:700;
+    color:var(--dark);
+    margin-bottom:20px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.section{
+    margin-bottom:35px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(280px,1fr));
+    gap:20px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+}
+
+.form-group label{
+    margin-bottom:8px;
+    font-weight:600;
+    color:var(--dark);
+}
+
+.form-group input,
+.form-group select{
+    width:100%;
+    padding:15px;
+    border:1px solid var(--border);
+    border-radius:14px;
+    outline:none;
+    transition:.3s;
+    font-size:15px;
+}
+
+.form-group input:focus,
+.form-group select:focus{
+    border-color:var(--primary);
+    box-shadow:
+    0 0 0 4px rgba(37,99,235,.1);
+}
+
+.full-width{
+    grid-column:1/-1;
+}
+
+.switch-container{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.switch{
+    position:relative;
+    width:55px;
+    height:30px;
+}
+
+.switch input{
+    display:none;
+}
+
+.slider{
+    position:absolute;
+    inset:0;
+    background:#cbd5e1;
+    border-radius:30px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.slider::before{
+    content:'';
+    width:24px;
+    height:24px;
+    position:absolute;
+    left:3px;
+    top:3px;
+    background:white;
+    border-radius:50%;
+    transition:.3s;
+}
+
+.switch input:checked + .slider{
+    background:var(--success);
+}
+
+.switch input:checked + .slider::before{
+    transform:translateX(25px);
+}
+
+.submit-section{
+    display:flex;
+    justify-content:flex-end;
+    gap:15px;
+    margin-top:20px;
+}
+
+.cancel-btn{
+    padding:14px 25px;
+    border:none;
+    border-radius:14px;
+    background:#e2e8f0;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.save-btn{
+    padding:14px 25px;
+    border:none;
+    border-radius:14px;
+    background:
+    linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary-dark)
+    );
+
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.save-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:
+    0 10px 25px rgba(37,99,235,.25);
+}
+
+@media(max-width:768px){
+
+    body{
+        padding:15px;
+    }
+
+    .form-card{
+        padding:20px;
+    }
+
+    .submit-section{
+        flex-direction:column;
+    }
+
+    .submit-section button{
+        width:100%;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="page-header">
+
+    <div>
+        <h1>Add New Student</h1>
+        <p>Create and configure attendance tracking for a Student</p>
+    </div>
+
+    <button class="back-btn" id="back-btn">
+        <i class="fa-solid fa-arrow-left"></i>
+        Back to Student Page
+    </button>
+
+</div>
+
+<div class="form-card" id="form-card">
+    
+ 
+
+    <form id="add-student-form">
+
+        <div class="section">
+    
+            <div class="section-title">
+                <i class="fa-solid fa-user-graduate"></i>
+                Student Information
+            </div>
+    
+            <div class="form-grid">
+    
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="student@example.com"
+                        required>
+                </div>
+    
+                <div class="form-group">
+                    <label>First Name</label>
+                    <input
+                        type="text"
+                        id="first_name"
+                        placeholder="John"
+                        required>
+                </div>
+    
+                <div class="form-group">
+                    <label>Last Name</label>
+                    <input
+                        type="text"
+                        id="last_name"
+                        placeholder="Doe"
+                        required>
+                </div>
+    
+                <div class="form-group">
+                    <label>Level</label>
+                    <select id="level" required>
+                        <option value="">Select Level</option>
+                        <option value="100">100 Level</option>
+                        <option value="200">200 Level</option>
+                        <option value="300">300 Level</option>
+                        <option value="400">400 Level</option>
+                        <option value="500">500 Level</option>
+                    </select>
+                </div>
+    
+                <div class="form-group">
+                    <label>Department</label>
+                    <input
+                        type="text"
+                        id="department"
+                        placeholder="Computer Science"
+                        required>
+                </div>
+    
+                <div class="form-group">
+                    <label>Course Code</label>
+                    <select id="select-course" required>
+                       
+                    </select>
+                </div>
+    
+            </div>
+    
+        </div>
+    
+        <div class="submit-section">
+    
+            <button
+                type="reset"
+                class="cancel-btn">
+                Cancel
+            </button>
+    
+            <button
+                type="submit"
+                class="save-btn"
+                id="submit-btn">
+                <i class="fa-solid fa-user-plus"></i>
+                Add Student
+            </button>
+    
+        </div>
+    
+    </form>
+    
+    <div id="message-box" class="message-box"></div>
+    <div id="message-box" class="message-box">  </div>
+</div>
+
+
+
+
+<script>
+
+submit_button = document.getElementById('form-card');
+    submit_button.addEventListener(
+        'submit',
+            
+    async function postCourseSchedule(e){
+    e.preventDefault();
+   
+
+    try{
+    document.getElementById('submit-btn').innerHTML = 'Adding Student.....'
+    
+    document.getElementById('submit-btn').disabled = true;
+
+    email = document.getElementById('email').value;
+
+    first_name = document.getElementById('first_name').value;
+
+    last_name = document.getElementById('last_name').value;
+
+    level = document.getElementById('level').value;
+
+    department = document.getElementById('department').value;
+
+    course_code = document.getElementById('select-course').value;
+
+
+
+    token = localStorage.getItem('auth_token');
+
+    const response = await fetch(
+    'https://attendance-app-backend-wasa.onrender.com/add-student/',
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    first_name : first_name,
+                    last_name : last_name,
+                    email : email,
+                    level : level,
+                    department : department,
+                    course_code : course_code
+                })
+            } 
+    );
+
+    const data = await response.json();
+    console.log(data)
+    if(response.status == 201){
+        document.getElementById('submit-btn').innerHTML = `<i class="fa-solid fa-user-plus"></i>
+                                                                        Add Student`
+        document.getElementById('submit-btn').disabled = false;
+        showMessage(data.message, 'success')
+        submit_button.reset();
+    } else{
+        document.getElementById('submit-btn').innerHTML = `<i class="fa-solid fa-user-plus"></i>
+                Add Student`
+        document.getElementById('submit-btn').disabled = false;
+       showMessage(data.message, 'error')
+    }
+} catch(e){
+    document.getElementById('submit-btn').innerHTML = `<i class="fa-solid fa-user-plus"></i>
+                Add Student`
+    document.getElementById('submit-btn').disabled = false;
+    console.log(e)
+}
+}
+
+    )
+</script>
+
+
+
+<script>
+    document.addEventListener(
+     'DOMContentLoaded',
+     getListOfCourses
+ );
+    
+    async function getListOfCourses(){
+ 
+ try{
+     select_course = document.getElementById('select-course')
+     token = localStorage.getItem('auth_token');
+     select_course.innerHTML = '<option> Loading Courses.... </option>';
+ 
+ const response = await fetch(
+         `https://attendance-app-backend-wasa.onrender.com/course/course-list/`,
+         {
+             headers: {
+                 'Authorization': `Token ${token}`,
+             }
+         }
+ );
+ const data = await response.json();
+ if(response.status == 200){
+    select_course.innerHTML = '<option> Select Course Code </option>';
+     data.forEach(element => {
+     
+         select_course.innerHTML += `
+         <option> ${element.course_code} </option>
+         `;
+     });
+ }
+ } catch(e){
+ console.log(e)
+ }
+ 
+ }
+ 
+ </script>
+
+
+<script>
+
+back_button = document.getElementById('back-btn');
+
+back_button.addEventListener(
+    'click',
+   () => { window.location.href = 'students.html'}
+)
+
+const titleInput =
+document.getElementById('course_title');
+
+const codeInput =
+document.getElementById('course_code');
+
+titleInput.addEventListener('input',()=>{
+
+document.getElementById(
+'preview-title'
+).textContent =
+titleInput.value || '---';
+
+});
+
+codeInput.addEventListener('input',()=>{
+
+document.getElementById(
+'preview-code'
+).textContent =
+codeInput.value || '---';
+
+});
+
+</script>
+
+<script>
+
+submit_button = document.getElementById('add-course-form');
+    submit_button.addEventListener(
+        'submit',
+            
+    async function postCourseSchedule(e){
+    e.preventDefault();
+    const startTime = convertTo24Hour(
+    document.getElementById('start_hour').value,
+    document.getElementById('start_minute').value,
+    document.getElementById('start_period').value
+    );
+
+
+    const endTime = convertTo24Hour(
+        document.getElementById('end_hour').value,
+        document.getElementById('end_minute').value,
+        document.getElementById('end_period').value
+    );
+    try{
+    document.getElementById('submit-btn').innerHTML = 'Saving.....'
+    
+    document.getElementById('submit-btn').disabled = true;
+
+    course_title = document.getElementById('course_title').value;
+
+    course_code = document.getElementById('course_code').value;
+
+    course_venue = document.getElementById('course_venue').value;
+
+    level = document.getElementById('level').value;
+
+    day = document.getElementById('day').value;
+
+    department = document.getElementById('department').value;
+
+    start_time = startTime;
+
+    end_time = endTime;
+
+    geofencing = document.getElementById('geofencing').value;
+
+    number_of_students = document.getElementById('number_of_students').value;
+
+    is_elective = document.getElementById('is_elective').checked;
+
+
+    token = localStorage.getItem('auth_token');
+
+    const response = await fetch(
+    'https://attendance-app-backend-wasa.onrender.com/course/course-management/',
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    course_title : course_title,
+                    course_code : course_code,
+                    course_location : course_venue,
+                    level : level,
+                    day :day,
+                    start_time :start_time,
+                    end_time : end_time,
+                    is_elective : is_elective,
+                    department : department,
+                    geo_fencing : geofencing,
+                    number_of_students : number_of_students
+                })
+            } 
+    );
+
+    const data = await response.json();
+    console.log(data)
+    if(response.status == 201){
+        document.getElementById('submit-btn').innerHTML = 'Save'
+        document.getElementById('submit-btn').disabled = false;
+        showMessage(data.message, 'success')
+        submit_button.reset();
+    } else{
+        document.getElementById('submit-btn').innerHTML = 'Save'
+        document.getElementById('submit-btn').disabled = false;
+       showMessage(data.message, 'error')
+    }
+} catch(e){
+    document.getElementById('submit-btn').innerHTML = 'Save'
+    document.getElementById('submit-btn').disabled = false;
+    console.log(e)
+}
+}
+
+    )
+
+
+function showMessage(message, type) {
+const messageBox = document.getElementById('message-box');
+
+messageBox.textContent = message;
+
+messageBox.classList.remove('success', 'error');
+
+messageBox.classList.add(type);
+messageBox.classList.add('show');
+
+setTimeout(() => {
+    messageBox.classList.remove('show');
+}, 3000);
+}
+
+
+function convertTo24Hour(hour, minute, period){
+
+let h = parseInt(hour);
+
+if(period === 'PM' && h !== 12){
+    h += 12;
+}
+
+if(period === 'AM' && h === 12){
+    h = 0;
+}
+
+return `${String(h).padStart(2,'0')}:${minute}:00`;
+}
+</script>
+
+</body>
+</html>

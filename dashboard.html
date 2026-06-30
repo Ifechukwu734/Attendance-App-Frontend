@@ -170,14 +170,14 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         <section class="section">
 
             <div class="section-title" id="session-title" >
-                Active Attendance Session
+                
             </div>
 
             <div class="session">
 
                 <div>
 
-                    <h2 id="course-code-title">loading...</h2>
+                    <h2 id="course-code-title"></h2>
 
                     <p>Venue: <span id="venue"> </span></p>
 
@@ -357,6 +357,7 @@ try {
             );
 
             const data = await response.json();
+            console.log(data)
             
             if(response.status == 404){
                 
@@ -371,11 +372,11 @@ try {
                 
             } else if(response.status == 200){
              session_title.innerHTML = 'Active Attendance Session';
-             course_code_title = `${data.session.course_code} - ${data.session.course_title}`;
+             course_code_title.innerHTML = `${data.session.course_code} - ${data.session.course_title}`;
              venue.innerHTML = `${data.session.course_location}`;
              radius.innerHTML = `${data.session.geofencing}m`;
              level.innerHTML = `${data.session.level}`;
-             time.innerHTML = `${data.session.start_time} - ${data.session.end_time}`;
+             time.innerHTML = `${formatTimeToAMPM(data.session.start_time)} - ${formatTimeToAMPM(data.session.end_time)}`;
              otp_token.innerHTML = `${data.session.token}`;
              startCountdown(data.remaining_seconds);
              exp_time.classList.add('timer-color')
@@ -419,6 +420,19 @@ const interval = setInterval(() => {
 
 }, 1000);
 
+}
+
+function formatTimeToAMPM(time24) {
+    const [hourStr, minute, second] = time24.split(':');
+
+    let hour = Number(hourStr);
+
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+
+    hour = hour % 12;
+    hour = hour === 0 ? 12 : hour;
+
+    return `${hour}:${minute} ${ampm}`;
 }
 </script>
 
