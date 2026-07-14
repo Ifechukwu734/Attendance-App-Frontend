@@ -762,7 +762,7 @@ async function createSession(){
         
        
     const response = await fetch(
-        'https://attendance-app-backend-wasa.onrender.com/course/attendance-session/',
+        'https://attendance-app-backend-production.up.railway.app/course/attendance-session/',
         {
             method: 'POST',
             headers: {
@@ -838,7 +838,7 @@ async function deleteCourse(){
         
        delete_button.textContent = 'Deleting......'
     const response = await fetch(
-        'https://attendance-app-backend-wasa.onrender.com/course/course-management/',
+        'https://attendance-app-backend-production.up.railway.app/course/course-management/',
         {
             method: 'DELETE',
             headers: {
@@ -943,7 +943,7 @@ setTimeout(() => {
             search_button.disabled = true;
             token = localStorage.getItem('auth_token');
             const response = await fetch(
-                `https://attendance-app-backend-wasa.onrender.com/course/course-management/?search=${search}&level=${level}`,
+                `https://attendance-app-backend-production.up.railway.app/course/course-management/?search=${search}&level=${level}`,
                 {
                     headers: {
                         'Authorization': `Token ${token}`,
@@ -1104,7 +1104,7 @@ return `${hour}:${minutes} ${period}`;
             token = localStorage.getItem('auth_token');
             course_grid.innerHTML = `<p style="text-align: center; font-weight: bold"> Getting Courses..... </p>`;
             const response = await fetch(
-                `https://attendance-app-backend-wasa.onrender.com/course/course-management/`,
+                `https://attendance-app-backend-production.up.railway.app/course/course-management/`,
                 {
                     headers: {
                         'Authorization': `Token ${token}`,

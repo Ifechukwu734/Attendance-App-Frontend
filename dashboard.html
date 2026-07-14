@@ -299,7 +299,7 @@ try {
     const token = localStorage.getItem('auth_token');
 
     const response = await fetch(
-        'https://attendance-app-backend-wasa.onrender.com/lecturer-dashboard/',
+        'https://attendance-app-backend-production.up.railway.app/lecturer-dashboard/',
         {
             headers: {
                 'Authorization': `Token ${token}`
@@ -348,7 +348,7 @@ try {
             const token = localStorage.getItem('auth_token');
 
             const response = await fetch(
-                'https://attendance-app-backend-wasa.onrender.com/course/attendance-session-dashboard/',
+                'https://attendance-app-backend-production.up.railway.app/course/attendance-session-dashboard/',
                 {
                     headers: {
                         'Authorization': `Token ${token}`
@@ -451,7 +451,7 @@ async function getDashboardCourse(){
     try{
         const token = localStorage.getItem('auth_token');
         const response = await fetch(
-            'https://attendance-app-backend-wasa.onrender.com/course/dashboard-courseview/',
+            'https://attendance-app-backend-production.up.railway.app/course/dashboard-courseview/',
             {
                 headers: {
                     'Authorization': `Token ${token}`,
@@ -503,7 +503,7 @@ async function getDashboardCourse(){
         try{
             const token = localStorage.getItem('auth_token');
             const response = await fetch(
-                'https://attendance-app-backend-wasa.onrender.com/dashboard-recent-attendance/',
+                'https://attendance-app-backend-production.up.railway.app/dashboard-recent-attendance/',
                 {
                     headers: {
                         'Authorization': `Token ${token}`,

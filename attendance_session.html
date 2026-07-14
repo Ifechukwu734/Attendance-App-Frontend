@@ -535,7 +535,7 @@ text-align:center;
 Refresh Session
 </button>
 
-<button class="btn danger" onclick="openModal('deleteModal')">
+<button class="btn danger" id="end-btn" onclick="openModal('deleteModal')">
 End Session
 </button>
 
@@ -682,7 +682,7 @@ Present
             const token = localStorage.getItem('auth_token')
             session_id = localStorage.getItem('session_id');
             response = await fetch(
-                'https://attendance-app-backend-wasa.onrender.com/export-live-attendance/',
+                'https://attendance-app-backend-production.up.railway.app/export-live-attendance/',
                 {
                     method: 'POST',
                     headers:{
@@ -762,7 +762,7 @@ function createCourse(){
             end_btn.disabled = true
 
             const response = await fetch(
-                'https://attendance-app-backend-wasa.onrender.com/course/end-session/',
+                'https://attendance-app-backend-production.up.railway.app/course/end-session/',
                 {
                     method: 'POST',
                     headers: {
@@ -831,7 +831,7 @@ setTimeout(() => {
             refresh_btn.innerHTML = 'Refreshing....'
             refresh_btn.disabled = true
         const response = await fetch(
-            'https://attendance-app-backend-wasa.onrender.com/course/attendance-session/',
+            'https://attendance-app-backend-production.up.railway.app/course/attendance-session/',
             {
                 method: 'PATCH',
                 headers: {
@@ -919,7 +919,7 @@ document.addEventListener(
             attendance_table_body = document.getElementById('attendance-table-body');
 
         const response = await fetch(
-            'https://attendance-app-backend-wasa.onrender.com/course/attendance-session/',
+            'https://attendance-app-backend-production.up.railway.app/course/attendance-session/',
             {
                 headers: {
                     'Authorization': `Token ${token}`,
@@ -990,7 +990,7 @@ document.addEventListener(
             attendance_rate.innerHTML = '0%'
             live_badge.innerHTML = `<div class="live-badge" style="background-color: #fad2d2; color: red;">🔴 No Session</div>`
             refresh_btn.disabled = true;
-            end_btn.disabled = true;
+            document.getElementById('end-btn').disabled = true;
             export_btn.disabled = true;
             table_wrapper.innerHTML = '';
             table_wrapper.innerHTML = `<p style="text-align:center; font-weight: bold;"> No Attendance Session </p>`
@@ -1001,7 +1001,7 @@ document.addEventListener(
 
     session_id = localStorage.getItem('session_id');
     console.log('session id: ',session_id)
-    const socket = new WebSocket(`wss://attendance-app-backend-wasa.onrender.com/ws/live-attendance/${session_id}`);
+    const socket = new WebSocket(`wss://attendance-app-backend-production.up.railway.app/ws/live-attendance/${session_id}`);
 
     socket.onmessage = function (event) {
     const data = JSON.parse(event.data);

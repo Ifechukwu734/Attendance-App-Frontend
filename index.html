@@ -98,6 +98,17 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 
             </form>
 
+            <div style="margin-top:20px;text-align:center;">
+
+                Don't have an account?
+
+                <a href="signup.html"
+                style="color:#2563EB;font-weight:bold;text-decoration:none;">
+                    Signup
+                </a>
+
+            </div>
+
         </div>
 
     </div>
@@ -136,7 +147,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         loader.classList.add('show');
         btnText.textContent = 'Logging in...';
         const response = await fetch(
-            'https://attendance-app-backend-wasa.onrender.com/lecturer-login/',
+            'https://attendance-app-backend-production.up.railway.app/lecturer-login/',
             {
                 method: 'POST',
                 headers: {

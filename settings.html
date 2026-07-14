@@ -736,7 +736,7 @@ Log Out
             logout_btn.innerHTML = 'Logging Out'
             logout_btn.disabled = true;
             const response = await fetch(
-                'https://attendance-app-backend-wasa.onrender.com/lecturer-logout/',
+                'https://attendance-app-backend-production.up.railway.app/lecturer-logout/',
                 {
                     method: 'POST',
                     headers:{
@@ -852,7 +852,7 @@ document.addEventListener('DOMContentLoaded', () => {
             save_btn.innerHTML = 'Saving.....';
             save_btn.disabled = true;
             const response = await fetch(
-                'https://attendance-app-backend-wasa.onrender.com/lecturer-profile/',
+                'https://attendance-app-backend-production.up.railway.app/lecturer-profile/',
                 {
                     method: 'PATCH',
                     headers: {
@@ -931,7 +931,7 @@ setTimeout(() => {
             save_btn.innerHTML = 'Updating.....';
             save_btn.disabled = true;
             const response = await fetch(
-                'https://attendance-app-backend-wasa.onrender.com/lecturer-profile/',
+                'https://attendance-app-backend-production.up.railway.app/lecturer-profile/',
                 {
                     method: 'PATCH',
                     headers: {
@@ -1014,7 +1014,7 @@ setTimeout(() => {
             document.getElementById('profile-name').textContent = 'Fetching Profile Details.....';
 
             const response = await fetch(
-                'https://attendance-app-backend-wasa.onrender.com/lecturer-profile/',
+                'https://attendance-app-backend-production.up.railway.app/lecturer-profile/',
                 {
                     headers: {
                         'Authorization': `Token ${token}`

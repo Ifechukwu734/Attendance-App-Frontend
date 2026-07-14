@@ -66,6 +66,21 @@ body{
     display:none;
 }
 
+.input-box select{
+    width:100%;
+    border:none;
+    outline:none;
+    background:transparent;
+    font-size:15px;
+    padding:10px 5px;
+    color:#333;
+    appearance:none;
+}
+
+.input-box select option{
+    color:#333;
+}
+
 .loader.show{
     display:block;
 }

@@ -444,7 +444,7 @@ try{
     select_course.innerHTML = '<option> Loading Courses.... </option>';
 
 const response = await fetch(
-        `https://attendance-app-backend-wasa.onrender.com/course/course-list/`,
+        `https://attendance-app-backend-production.up.railway.app/course/course-list/`,
         {
             headers: {
                 'Authorization': `Token ${token}`,
@@ -514,7 +514,7 @@ console.log(e)
         if(course_code){
             courses_table.innerHTML = `<p style='text-align:center'>Fetching student details.....</p>`
             const response = await fetch(
-                `https://attendance-app-backend-wasa.onrender.com/student-page/?course_code=${course_code}`,
+                `https://attendance-app-backend-production.up.railway.app/student-page/?course_code=${course_code}`,
                 {
                     headers: {
                         'Authorization': `Token ${token}`,
@@ -622,7 +622,7 @@ console.log(e)
         search_btn.innerHTML = `<i class="fa-solid fa-search"></i>
                                                 Searching...... `;
         const response = await fetch(
-                `https://attendance-app-backend-wasa.onrender.com/student-page/?course_code=${course}&search=${search_field}`,
+                `https://attendance-app-backend-production.up.railway.app/student-page/?course_code=${course}&search=${search_field}`,
                 {
                     headers: {
                         'Authorization': `Token ${token}`,
